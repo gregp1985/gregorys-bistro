@@ -1,9 +1,18 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.postgres.indexes import GistIndex
 from .utils import SLOT_DURATION
+
+
+class Table(models.Model):
+    number = models.IntegerFieldField()
+    seats = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"Table No. {self.number} ({self.seats} seats)"
 
 
 class OpeningHours(models.Model):
@@ -31,23 +40,17 @@ class OpeningHours(models.Model):
         )
 
 
-class Table(models.Model):
-    number = models.IntegerFieldField()
-    seats = models.PositiveIntegerField()
-
-    def __str__(self):
-        return f"Table No. {self.number} ({self.seats} seats)"
-
-
 class Booking(models.Model):
     table = models.ForeignKey(
         Table,
         related_name="bookings",
         on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=100)
+    name = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="blog_posts"
+    )
     reference = models.CharField(max_length=20, unique=True)
-    allergies = models.TextField()
+    allergies = models.TextField(blank=True)
     start_time = models.DateTimeField()
     time_range = DateTimeRangeField(editable=False)
 
@@ -89,6 +92,7 @@ class Booking(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.name} @ {self.start_time}"
-
-
+        return (
+            f"{self.name} - {self.table} "
+            f"@ {self.start_time.strftime('%Y-%m-%d %H:%M')}"
+        )
