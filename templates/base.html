@@ -30,12 +30,12 @@
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link {% if request.path == home_url %}active" href="{% url 'home' %}">Home</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == gallery_url %}active" href="{% url 'gallery' %}">Gallery</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == booking_url %}active" href="{% url 'booking' %}">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == menu_url %}active" href="{% url 'menu' %}">Menu</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == contact_url %}active" href="{% url 'contact' %}">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == reservations_url %}active" href="{% url 'reservations' %}">Reservations</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == home_url %}active" aria-current="page{% endif %}" href="{% url 'home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == gallery_url %}active" aria-current="page{% endif %}" href="{% url 'gallery' %}">Gallery</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == booking_url %}active" aria-current="page{% endif %}" href="{% url 'booking' %}">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == menu_url %}active" aria-current="page{% endif %}" href="{% url 'menu' %}">Menu</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == contact_url %}active" aria-current="page{% endif %}" href="{% url 'contact' %}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == reservations_url %}active" aria-current="page{% endif %}" href="{% url 'reservations' %}">Reservations</a></li>
                 </ul>
             </div>
         </div>
