@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
@@ -41,6 +42,11 @@ class OpeningHours(models.Model):
 
 
 class Booking(models.Model):
+    STATUS_CHOICES = [
+        ('BOOKED', 'Booked'),
+        ('CANCELLED', 'Cancelled'),
+    ]
+
     table = models.ForeignKey(
         Table,
         related_name="bookings",
@@ -49,10 +55,15 @@ class Booking(models.Model):
     name = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="blog_posts"
     )
-    reference = models.CharField(max_length=20, unique=True)
+    reference = models.CharField(max_length=12, unique=True, editable=False)
     allergies = models.TextField(blank=True)
     start_time = models.DateTimeField()
     time_range = DateTimeRangeField(editable=False)
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='BOOKED'
+    )
 
     def clean(self):
         weekday = self.start_time.weekday()
@@ -89,10 +100,17 @@ class Booking(models.Model):
             self.start_time,
             self.start_time + SLOT_DURATION
         )
+
+        # Generate reference if not set
+        if not self.reference:
+            # Simple approach: use UUID, truncated
+            self.reference = str(uuid.uuid4()).replace("-", "")[:12].upper()
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return (
             f"{self.name} - {self.table} "
-            f"@ {self.start_time.strftime('%Y-%m-%d %H:%M')}"
+            f"@ {self.start_time.strftime('%Y-%m-%d %H:%M')} | "
+            f"Ref: {self.reference} | Status: {self.status}"
         )
