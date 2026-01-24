@@ -9,5 +9,5 @@ urlpatterns = [
         views.booking_calendar_data,
         name='booking_calendar_data',
     ),
-    path('booking/', views.booking_page, name='booking'),
+    path('booking/', views.make_booking, name='booking'),
 ]

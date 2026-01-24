@@ -1,39 +1,83 @@
 {% extends "base.html" %}
 {% load static %}
+
 {% block content %}
+<div class="booking-page">
 
-<!-- booking.html content starts here -->
+  <h1>Make a Reservation</h1>
 
-<h2>My Bookings</h2>
-{% if my_bookings %}
-    <ul>
-        {% for booking in my_bookings %}
-            <li>
-                {{ booking.start_time|date:"Y-m-d H:i" }} - {{ booking.table }} 
-                | Ref: {{ booking.reference }} 
-                | Status: {{ booking.status }}
-                {% if booking.status != "CANCELLED" %}
-                    <a href="{% url 'edit_booking' booking.id %}">Edit</a>
-                    <a href="{% url 'cancel_booking' booking.id %}">Cancel</a>
+  <!-- BOOKING FORM -->
+  <section class="booking-form">
+    <form method="get" novalidate>
+      {% csrf_token %}
+
+      <!-- {% if form.non_field_errors %}
+        <div class="form-errors">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %} -->
+        <div class="form-row">
+            {{ form.date.label_tag }}
+            {{ form.date}}
+        </div>
+
+        <div class="form-row">
+            {{ form.party_size.label_tag }}
+            {{ form.party_size }}
+        </div>
+
+      {% for field in form %}
+        {% if field.name != "date" and field.name != "party_size" and field.name != "allergies" %}
+            <div class="form-row">
+                {{ field.label_tag }}
+                {{ field }}
+
+                {% if field.errors %}
+                    <div class="field-errors">
+                        {{ field.errors }}
+                    </div>
                 {% endif %}
-            </li>
+            </div>
+        {% endif %}
+      {% endfor %}
+        
+        <div class="form-row">
+            {{ form.allergies.label_tag }}
+            {{ form.allergies }}
+        </div>
+        
+        <button type="submit" formmethod="post" class="btn-primary">
+            Make Booking
+        </button>
+    </form>
+  </section>
+
+  <!-- MY BOOKINGS -->
+  {% if my_bookings %}
+    <section class="my-bookings">
+      <h2>My Upcoming Bookings</h2>
+
+      <ul class="booking-list">
+        {% for booking in my_bookings %}
+          <li class="booking-item">
+            <div class="booking-details">
+              <strong>{{ booking.start_time|date:"D d M Y" }}</strong>
+              at {{ booking.start_time|time:"H:i" }}
+              <br>
+              Table {{ booking.table }}
+              {% if booking.status == "CANCELLED" %}
+                <span class="status cancelled">Cancelled</span>
+              {% endif %}
+            </div>
+
+            <div class="booking-actions">
+
+            </div>
+          </li>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>You have no current bookings.</p>
-{% endif %}
+      </ul>
+    </section>
+  {% endif %}
 
-<hr>
-
-<h2>Make a New Booking</h2>
-<form method="post">
-    {% csrf_token %}
-    <p>{{ form.date.label_tag }} {{ form.date }}</p>
-    <p>{{ form.start_time.label_tag }} {{ form.start_time }}</p>
-    <p>{{ form.reference.label_tag }} {{ form.reference }}</p>
-    <p>{{ form.allergies.label_tag }} {{ form.allergies }}</p>
-    <button type="submit">Book Now</button>
-</form>
-
-<!-- booking.html content ends here -->
+</div>
 {% endblock %}

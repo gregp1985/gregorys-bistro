@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.postgres.indexes import GistIndex
-from .utils import SLOT_DURATION
+from django.utils import timezone
+from django.utils.dateparse import parse_datetime
+from .constants import SLOT_DURATION
 
 
 class Table(models.Model):
@@ -66,6 +68,15 @@ class Booking(models.Model):
     )
 
     def clean(self):
+        if not self.start_time:
+            return
+
+        if isinstance(self.start_time, str):
+            self.start_time = parse_datetime(self.start_time)
+
+        if not self.start_time:
+            raise ValidationError("Invalid booking time.")
+
         weekday = self.start_time.weekday()
 
         try:
@@ -96,14 +107,19 @@ class Booking(models.Model):
         ]
 
     def save(self, *args, **kwargs):
+        if self.start_time and timezone.is_naive(self.start_time):
+            self.start_time = timezone.make_aware(
+                self.start_time,
+                timezone.get_current_timezone(),
+            )
+
         self.time_range = (
             self.start_time,
             self.start_time + SLOT_DURATION
         )
 
-        # Generate reference if not set
+        # Generate reference
         if not self.reference:
-            # Simple approach: use UUID, truncated
             self.reference = str(uuid.uuid4()).replace("-", "")[:12].upper()
 
         super().save(*args, **kwargs)
