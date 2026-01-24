@@ -9,5 +9,10 @@ urlpatterns = [
         views.booking_calendar_data,
         name='booking_calendar_data',
     ),
+    path(
+        "cancel/<int:booking_id>/",
+        views.cancel_booking,
+        name="cancel_booking"
+    ),
     path('booking/', views.make_booking, name='booking'),
 ]

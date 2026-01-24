@@ -39,11 +39,11 @@ def make_booking(request):
     return render(request, "booking/booking.html", context)
 
 
-# def cancel_booking(request, booking_id):
-#     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-#     booking.status = 'CANCELLED'
-#     booking.save()
-#     return redirect('make_booking')
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id, name=request.user)
+    booking.status = 'CANCELLED'
+    booking.save()
+    return redirect("booking:booking")
 
 
 # def edit_booking(request, booking_id):

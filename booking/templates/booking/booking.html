@@ -45,7 +45,7 @@
             {{ form.allergies.label_tag }}
             {{ form.allergies }}
         </div>
-        
+
         <button type="submit" formmethod="post" class="btn-primary">
             Make Booking
         </button>
@@ -71,7 +71,21 @@
             </div>
 
             <div class="booking-actions">
-
+                <form
+                    method="post"
+                    action="{% url 'booking:cancel_booking' booking.id %}"
+                    style="display:inline"
+                    onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+                >
+                    {% csrf_token %}
+                    {% if booking.status != "CANCELLED" %}
+                        <button type="submit">Cancel</button>
+                    {% else %}
+                        <p class="text-muted">
+                            This booking has been cancelled and cannot be modified.
+                        </p>
+                    {% endif %}
+                </form>
             </div>
           </li>
         {% endfor %}
