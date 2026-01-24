@@ -1,11 +1,13 @@
 from datetime import datetime, timedelta
-from .models import Table, OpeningHours
+
 
 SLOT_DURATION = timedelta(hours=1, minutes=30)
 INTERVAL = timedelta(minutes=15)
 
 
 def get_available_slots(date, party_size=1):
+    from .models import Table, OpeningHours
+
     weekday = date.weekday()
     try:
         opening = OpeningHours.objects.get(weekday=weekday)

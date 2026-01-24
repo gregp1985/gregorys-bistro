@@ -11,7 +11,7 @@ class BookingForm(forms.ModelForm):
 
     class Meta:
         model = Booking
-        fields = ["date", "start_time", "table", "reference", "allergies"]
+        fields = ["date", "start_time", "table", "allergies"]
 
     def __init__(self, *args, **kwargs):
         # Expect logged-in user and optional party_size in kwargs
@@ -22,7 +22,8 @@ class BookingForm(forms.ModelForm):
         # Only show start_time and table after date is selected
         if "date" in self.data:
             try:
-                selected_date = forms.fields.datetime.date.fromisoformat(self.data["date"])
+                selected_date = forms.fields.datetime.date.fromisoformat(
+                    self.data["date"])
             except Exception:
                 selected_date = None
         else:
@@ -37,11 +38,13 @@ class BookingForm(forms.ModelForm):
                 for table in tables:
                     choices.append((
                         f"{slot_time.isoformat()}_{table.pk}",
-                        f"{slot_time.strftime('%H:%M')} - {(slot_time + SLOT_DURATION).strftime('%H:%M')} | {table}"
+                        f"{slot_time.strftime('%H:%M')} - "
+                        f"{(slot_time + SLOT_DURATION).strftime('%H:%M')} | "
+                        f"{table}"
                     ))
 
             self.fields["start_time"].widget = forms.Select(choices=choices)
-            self.fields["table"].widget = forms.HiddenInput()  # table selected via slot value
+            self.fields["table"].widget = forms.HiddenInput()
         else:
             self.fields["start_time"].widget = forms.Select(choices=[])
 

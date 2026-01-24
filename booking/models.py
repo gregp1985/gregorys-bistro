@@ -9,7 +9,7 @@ from .utils import SLOT_DURATION
 
 
 class Table(models.Model):
-    number = models.IntegerFieldField()
+    number = models.IntegerField()
     seats = models.PositiveIntegerField()
 
     def __str__(self):
@@ -48,12 +48,12 @@ class Booking(models.Model):
     ]
 
     table = models.ForeignKey(
-        Table,
+        "Table",
         related_name="bookings",
         on_delete=models.CASCADE
     )
     name = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="blog_posts"
+        User, on_delete=models.CASCADE, related_name="bookings"
     )
     reference = models.CharField(max_length=12, unique=True, editable=False)
     allergies = models.TextField(blank=True)
