@@ -1,5 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
+from django.utils.timezone import localtime
 from .forms import BookingForm
 from .models import Booking
 
@@ -53,3 +56,37 @@ def edit_booking(request, booking_id):
         "edit_booking.html",
         {"form": form, "booking": booking}
     )
+
+
+@staff_member_required(login_url="account_login")
+def booking_calendar_data(request):
+    """
+    JSON endpoint consumed by FullCalendar.
+    Returns bookings as calendar events.
+    """
+
+    bookings = (
+        Booking.objects
+        .select_related("table", "name")
+        .exclude(status="CANCELLED")
+    )
+
+    events = []
+
+    for booking in bookings:
+        start = localtime(booking.start_time)
+        end = localtime(booking.time_range.upper)
+
+        events.append({
+            "id": booking.id,
+            "title": f"Table {booking.table} – {booking.name}",
+            "start": start.isoformat(),
+            "end": end.isoformat(),
+            "extendedProps": {
+                "reference": booking.reference,
+                "status": booking.status,
+                "allergies": booking.allergies,
+            }
+        })
+
+    return JsonResponse(events, safe=False)
