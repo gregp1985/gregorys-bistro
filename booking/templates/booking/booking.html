@@ -5,51 +5,35 @@
 <div class="booking-page">
 
   <h1>Make a Reservation</h1>
-
   <!-- BOOKING FORM -->
   <section class="booking-form">
-    <form method="get" novalidate>
+    <form method="post">
       {% csrf_token %}
-
-      <!-- {% if form.non_field_errors %}
-        <div class="form-errors">
-          {{ form.non_field_errors }}
-        </div>
-      {% endif %} -->
-        <div class="form-row">
-            {{ form.date.label_tag }}
-            {{ form.date}}
-        </div>
-
-        <div class="form-row">
-            {{ form.party_size.label_tag }}
-            {{ form.party_size }}
-        </div>
-
-      {% for field in form %}
-        {% if field.name != "date" and field.name != "party_size" and field.name != "allergies" %}
-            <div class="form-row">
-                {{ field.label_tag }}
-                {{ field }}
-
-                {% if field.errors %}
-                    <div class="field-errors">
-                        {{ field.errors }}
-                    </div>
-                {% endif %}
-            </div>
+      <div>
+        <div>Date:</div>
+        <div>{{ form.date }}</div>
+      </div>
+      <div>
+        <div>Number of People:</div>
+        <div>{{ form.party_size }}</div>
+      </div>
+      <div>
+        <div>Time:</div>
+        <div>{{ form.slot }}</div>
+      </div>
+      <div>
+        <div>Allergies?:</div>
+        <div>{{ form.allergies }}</div>
+      </div>
+      <button type="submit">
+        {% if editing %}
+          Amend booking
+        {% else %}
+          Make booking
         {% endif %}
-      {% endfor %}
-        
-        <div class="form-row">
-            {{ form.allergies.label_tag }}
-            {{ form.allergies }}
-        </div>
-
-        <button type="submit" formmethod="post" class="btn-primary">
-            Make Booking
-        </button>
+      </button>
     </form>
+ 
   </section>
 
   <!-- MY BOOKINGS -->
@@ -64,13 +48,18 @@
               <strong>{{ booking.start_time|date:"D d M Y" }}</strong>
               at {{ booking.start_time|time:"H:i" }}
               <br>
-              Table {{ booking.table }}
+              ({{ booking.party_size }} people)
               {% if booking.status == "CANCELLED" %}
-                <span class="status cancelled">Cancelled</span>
+                <span class="status cancelled">--Cancelled--</span>
               {% endif %}
             </div>
 
             <div class="booking-actions">
+                
+                {% if booking.status != "CANCELLED" %}
+                  <a href="{% url 'booking:edit_booking' booking.id %}">Edit</a>
+                {% endif %}
+                
                 <form
                     method="post"
                     action="{% url 'booking:cancel_booking' booking.id %}"
@@ -94,4 +83,7 @@
   {% endif %}
 
 </div>
+{% endblock %}
+{% block extras %}
+<script src="{% static 'js/available_slots.js' %}"></script>
 {% endblock %}

@@ -59,6 +59,7 @@ class Booking(models.Model):
     )
     reference = models.CharField(max_length=12, unique=True, editable=False)
     allergies = models.TextField(blank=True)
+    party_size = models.PositiveSmallIntegerField()
     start_time = models.DateTimeField()
     time_range = DateTimeRangeField(editable=False)
     status = models.CharField(

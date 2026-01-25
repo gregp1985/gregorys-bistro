@@ -10,9 +10,19 @@ urlpatterns = [
         name='booking_calendar_data',
     ),
     path(
+        "edit/<int:booking_id>/",
+        views.edit_booking,
+        name="edit_booking"
+    ),
+    path(
+        "available-slots/",
+        views.available_slots,
+        name="available_slots"
+    ),
+    path(
         "cancel/<int:booking_id>/",
         views.cancel_booking,
         name="cancel_booking"
     ),
-    path('booking/', views.make_booking, name='booking'),
+    path('', views.make_booking, name='booking'),
 ]
