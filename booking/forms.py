@@ -37,18 +37,30 @@ class BookingForm(forms.ModelForm):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
 
-        data = self.data if self.is_bound else {}
-        selected_date = data.get('date')
-        party_size = data.get('party_size')
+        if not self.is_bound:
+            return  # GET request → AJAX handles display
+
+        selected_date = self.data.get('date')
+        party_size = self.data.get('party_size')
 
         if not selected_date or not party_size:
             return
 
         try:
-            selected_date = datetime.fromisoformat(str(selected_date)).date()
+            selected_date = datetime.fromisoformat(selected_date).date()
             party_size = int(party_size)
-        except Exception:
+        except (ValueError, TypeError):
             return
+
+        slots = get_available_slots(selected_date, party_size)
+
+        self.fields['slot'].choices = [
+            (
+                f'{slot_time.isoformat()}|{tables[0].pk}',
+                slot_time.strftime('%H:%M'),
+            )
+            for slot_time, tables in slots
+        ]
 
         # slots = get_available_slots(
         #     selected_date,

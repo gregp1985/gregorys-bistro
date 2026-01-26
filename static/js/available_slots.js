@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('booking-form');
     const dateField = document.getElementById('id_date');
     const partyField = document.getElementById('id_party_size');
     const slotField = document.getElementById('id_slot');
@@ -6,18 +7,24 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadSlots() {
         const date = dateField.value;
         const party = partyField.value;
+        const bookingId = form?.dataset.bookingId;
 
         if (!date || !party) {
             slotField.innerHTML = '';
             return;
         }
 
-        fetch(`/booking/available-slots/?date=${date}&party_size=${party}`)
+        let url = `/booking/available-slots/?date=${date}&party_size=${party}`
+        if (bookingId) {
+            url += `&exclude=${bookingId}`;
+        }
+
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 slotField.innerHTML = '';
 
-                if (data.slots.length === 0) {
+                if (!data.slots || data.slots.length === 0) {
                     const opt = document.createElement('option');
                     opt.textContent = 'No availability';
                     slotField.appendChild(opt);

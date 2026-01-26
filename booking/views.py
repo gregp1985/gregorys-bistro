@@ -2,11 +2,11 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
 from django.utils.timezone import localtime
 from datetime import datetime
 from .forms import BookingForm
 from .models import Booking
-from .constants import SLOT_DURATION
 from .utils import get_available_slots
 
 
@@ -14,17 +14,26 @@ from .utils import get_available_slots
 def available_slots(request):
     date = request.GET.get('date')
     party_size = request.GET.get('party_size')
+    exclude_id = request.GET.get('exclude')
 
     if not date or not party_size:
         return JsonResponse({'slots': []})
 
-    try:
-        date = datetime.fromisoformat(date).date()
-        party_size = int(party_size)
-    except ValueError:
-        return JsonResponse({'slots': []})
+    date = datetime.fromisoformat(date).date()
+    party_size = int(party_size)
 
-    slots = get_available_slots(date, party_size)
+    exclude_booking = None
+    if exclude_id:
+        exclude_booking = Booking.objects.filter(
+            id=exclude_id,
+            name=request.user
+        ).first()
+
+    slots = get_available_slots(
+        date,
+        party_size,
+        exclude_bookings=exclude_booking,
+        )
 
     data = []
     for slot_time, tables in slots:
@@ -41,26 +50,35 @@ def available_slots(request):
 
 @login_required
 def make_booking(request):
-    my_bookings = Booking.objects.filter(
-        name=request.user).order_by('start_time')
+    now = timezone.now()
 
-    if request.method == 'POST':
-        form = BookingForm(
-            request.POST,
-            user=request.user,
-        )
-        if form.is_valid():
-            form.save()
-            return redirect('booking:booking')
-    else:
-        form = BookingForm(user=request.user)
+    upcoming_bookings = Booking.objects.filter(
+        name=request.user,
+        start_time__gte=now
+        ).order_by('start_time')
+
+    past_bookings = Booking.objects.filter(
+        name=request.user,
+        start_time__lt=now,
+        ).order_by('-start_time')
+
+    form = BookingForm(
+        request.POST or None,
+        user=request.user,
+    )
+
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        return redirect('booking:booking')
 
     return render(
         request,
         'booking/booking.html',
         {
             'form': form,
-            'my_bookings': my_bookings,
+            'upcoming_bookings': upcoming_bookings,
+            'past_bookings': past_bookings,
+            'editing': False,
         }
     )
 

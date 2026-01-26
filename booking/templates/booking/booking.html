@@ -3,11 +3,32 @@
 
 {% block content %}
 <div class='booking-page'>
-
-  <h1>Make a Booking</h1>
+  {% if editing %}
+    <h1>Editing Booking</h1>
+        <p>
+      <strong>Reference:</strong> {{ form.instance.id }}
+    </p>
+    <p>
+      <strong>Date:</strong>
+      {{ form.instance.start_time|date:'F j, Y' }}
+    </p>
+    <p>
+      <strong>Time:</strong>
+      {{ form.instance.start_time|time:'H:i' }}
+    </p>
+    <p>
+      <strong>Number of people:</strong>
+      {{ form.instance.party_size }}
+    </p>
+  </div>
+  {% else %}
+    <h1>Make a Booking</h1>
+  {% endif %}
   <!-- BOOKING FORM -->
   <section class='booking-form'>
-    <form method='post'>
+    <form method='post'
+          id='booking-form'
+          {% if editing %}data-booking-id='{{ form.instance.id|default:"" }}'{% endif %}>
       {% csrf_token %}
       <div>
         <div>Date:</div>
@@ -25,6 +46,11 @@
         <div>Allergies?:</div>
         <div>{{ form.allergies }}</div>
       </div>
+      {{ form.non_field_errors }}
+
+      {% for field in form %}
+        {{ field.errors }}
+      {% endfor %}
       <button type='submit'>
         {% if editing %}
           Amend booking
@@ -37,12 +63,33 @@
   </section>
 
   <!-- MY BOOKINGS -->
-  {% if my_bookings %}
+  {% if past_bookings %}
+    <section class='my-bookings'>
+      <h2>My Past Bookings</h2>
+
+      <ul class='booking-list'>
+        {% for booking in past_bookings %}
+          <li class='booking-item'>
+            <div class='booking-details'>
+              <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
+              at {{ booking.start_time|time:'H:i' }}
+              <br>
+              ({{ booking.party_size }} people)
+              {% if booking.status == 'CANCELLED' %}
+                <span class='status cancelled'>--Cancelled--</span>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% if upcoming_bookings %}
     <section class='my-bookings'>
       <h2>My Upcoming Bookings</h2>
 
       <ul class='booking-list'>
-        {% for booking in my_bookings %}
+        {% for booking in upcoming_bookings %}
           <li class='booking-item'>
             <div class='booking-details'>
               <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
@@ -81,7 +128,6 @@
       </ul>
     </section>
   {% endif %}
-
 </div>
 {% endblock %}
 {% block extras %}
