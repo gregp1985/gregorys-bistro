@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-<div class="booking-page">
+<div class='booking-page'>
 
   <h1>Make a Reservation</h1>
   <!-- BOOKING FORM -->
-  <section class="booking-form">
-    <form method="post">
+  <section class='booking-form'>
+    <form method='post'>
       {% csrf_token %}
       <div>
         <div>Date:</div>
@@ -25,7 +25,7 @@
         <div>Allergies?:</div>
         <div>{{ form.allergies }}</div>
       </div>
-      <button type="submit">
+      <button type='submit'>
         {% if editing %}
           Amend booking
         {% else %}
@@ -38,39 +38,39 @@
 
   <!-- MY BOOKINGS -->
   {% if my_bookings %}
-    <section class="my-bookings">
+    <section class='my-bookings'>
       <h2>My Upcoming Bookings</h2>
 
-      <ul class="booking-list">
+      <ul class='booking-list'>
         {% for booking in my_bookings %}
-          <li class="booking-item">
-            <div class="booking-details">
-              <strong>{{ booking.start_time|date:"D d M Y" }}</strong>
-              at {{ booking.start_time|time:"H:i" }}
+          <li class='booking-item'>
+            <div class='booking-details'>
+              <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
+              at {{ booking.start_time|time:'H:i' }}
               <br>
               ({{ booking.party_size }} people)
-              {% if booking.status == "CANCELLED" %}
-                <span class="status cancelled">--Cancelled--</span>
+              {% if booking.status == 'CANCELLED' %}
+                <span class='status cancelled'>--Cancelled--</span>
               {% endif %}
             </div>
 
-            <div class="booking-actions">
+            <div class='booking-actions'>
                 
-                {% if booking.status != "CANCELLED" %}
-                  <a href="{% url 'booking:edit_booking' booking.id %}">Edit</a>
+                {% if booking.status != 'CANCELLED' %}
+                  <a href='{% url "booking:edit_booking" booking.id %}'>Edit</a>
                 {% endif %}
                 
                 <form
-                    method="post"
-                    action="{% url 'booking:cancel_booking' booking.id %}"
-                    style="display:inline"
-                    onsubmit="return confirm('Are you sure you want to cancel this booking?');"
+                    method='post'
+                    action='{% url "booking:cancel_booking" booking.id %}'
+                    style='display:inline'
+                    onsubmit='return confirm("Are you sure you want to cancel this booking?");'
                 >
                     {% csrf_token %}
-                    {% if booking.status != "CANCELLED" %}
-                        <button type="submit">Cancel</button>
+                    {% if booking.status != 'CANCELLED' %}
+                        <button type='submit'>Cancel</button>
                     {% else %}
-                        <p class="text-muted">
+                        <p class='text-muted'>
                             This booking has been cancelled and cannot be modified.
                         </p>
                     {% endif %}
@@ -85,5 +85,5 @@
 </div>
 {% endblock %}
 {% block extras %}
-<script src="{% static 'js/available_slots.js' %}"></script>
+<script src='{% static "js/available_slots.js" %}'></script>
 {% endblock %}

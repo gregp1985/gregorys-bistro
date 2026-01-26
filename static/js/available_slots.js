@@ -1,38 +1,38 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const dateField = document.getElementById("id_date");
-    const partyField = document.getElementById("id_party_size");
-    const slotField = document.getElementById("id_slot");
+document.addEventListener('DOMContentLoaded', function () {
+    const dateField = document.getElementById('id_date');
+    const partyField = document.getElementById('id_party_size');
+    const slotField = document.getElementById('id_slot');
 
     function loadSlots() {
         const date = dateField.value;
         const party = partyField.value;
 
         if (!date || !party) {
-            slotField.innerHTML = "";
+            slotField.innerHTML = '';
             return;
         }
 
         fetch(`/booking/available-slots/?date=${date}&party_size=${party}`)
             .then(response => response.json())
             .then(data => {
-                slotField.innerHTML = "";
+                slotField.innerHTML = '';
 
                 if (data.slots.length === 0) {
-                    const opt = document.createElement("option");
-                    opt.textContent = "No availability";
+                    const opt = document.createElement('option');
+                    opt.textContent = 'No availability';
                     slotField.appendChild(opt);
                     return;
                 }
 
                 data.slots.forEach(slot => {
-                    const option = document.createElement("option");
+                    const option = document.createElement('option');
                     option.value = slot.value;
-                    option.textContent = slot.label.split("–")[0].trim();
+                    option.textContent = slot.label.split('-')[0].trim();
                     slotField.appendChild(option);
                 });
             });
     }
 
-    dateField.addEventListener("change", loadSlots);
-    partyField.addEventListener("change", loadSlots);
+    dateField.addEventListener('change', loadSlots);
+    partyField.addEventListener('change', loadSlots);
 });

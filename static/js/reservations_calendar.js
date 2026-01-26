@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     initialView: 'timeGridWeek',
     nowIndicator: true,
-    height: "auto",
+    height: 'auto',
 
-    slotMinTime: "11:00:00",
-    slotMaxTime: "23:00:00",
+    slotMinTime: '11:00:00',
+    slotMaxTime: '23:00:00',
 
     dayHeaderFormat: {
     weekday: 'short',
@@ -26,14 +26,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     eventClick: function(info) {
       window.location.href =
-        adminChangeUrl.replace("BOOKING_ID", info.event.id);
+        adminChangeUrl.replace('BOOKING_ID', info.event.id);
     },
 
     eventDidMount: function(info) {
       info.el.title =
         `Ref: ${info.event.extendedProps.reference}\n` +
         `Status: ${info.event.extendedProps.status}\n` +
-        `Allergies: ${info.event.extendedProps.allergies || "None"}`;
+        `Allergies: ${info.event.extendedProps.allergies || 'None'}`;
     },
 
     allDaySlot: false,

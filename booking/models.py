@@ -15,18 +15,18 @@ class Table(models.Model):
     seats = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"Table No. {self.number} ({self.seats} seats)"
+        return f'Table No. {self.number} ({self.seats} seats)'
 
 
 class OpeningHours(models.Model):
     WEEKDAYS = [
-        (0, "Monday"),
-        (1, "Tuesday"),
-        (2, "Wednesday"),
-        (3, "Thursday"),
-        (4, "Friday"),
-        (5, "Saturday"),
-        (6, "Sunday"),
+        (0, 'Monday'),
+        (1, 'Tuesday'),
+        (2, 'Wednesday'),
+        (3, 'Thursday'),
+        (4, 'Friday'),
+        (5, 'Saturday'),
+        (6, 'Sunday'),
     ]
 
     weekday = models.IntegerField(choices=WEEKDAYS)
@@ -34,12 +34,12 @@ class OpeningHours(models.Model):
     close_time = models.TimeField()
 
     class Meta:
-        unique_together = ("weekday",)
+        unique_together = ('weekday',)
 
     def __str__(self):
         return (
-            f"{self.get_weekday_display()}: "
-            f"{self.open_time}-{self.close_time}"
+            f'{self.get_weekday_display()}: '
+            f'{self.open_time}-{self.close_time}'
         )
 
 
@@ -50,12 +50,12 @@ class Booking(models.Model):
     ]
 
     table = models.ForeignKey(
-        "Table",
-        related_name="bookings",
+        'Table',
+        related_name='bookings',
         on_delete=models.CASCADE
     )
     name = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="bookings"
+        User, on_delete=models.CASCADE, related_name='bookings'
     )
     reference = models.CharField(max_length=12, unique=True, editable=False)
     allergies = models.TextField(blank=True)
@@ -76,35 +76,35 @@ class Booking(models.Model):
             self.start_time = parse_datetime(self.start_time)
 
         if not self.start_time:
-            raise ValidationError("Invalid booking time.")
+            raise ValidationError('Invalid booking time.')
 
         weekday = self.start_time.weekday()
 
         try:
             opening = OpeningHours.objects.get(weekday=weekday)
         except OpeningHours.DoesNotExist:
-            raise ValidationError("The restaurant is closed on this day.")
+            raise ValidationError('The restaurant is closed on this day.')
 
         start = self.start_time.time()
         end = (self.start_time + SLOT_DURATION).time()
 
         if start < opening.open_time or end > opening.close_time:
             raise ValidationError(
-                "Booking time is outside opening hours."
+                'Booking time is outside opening hours.'
             )
 
     class Meta:
         constraints = [
             ExclusionConstraint(
-                name="prevent_table_double_booking",
+                name='prevent_table_double_booking',
                 expressions=[
-                    ("table", "="),
-                    ("time_range", "&&"),
+                    ('table', '='),
+                    ('time_range', '&&'),
                 ],
             ),
         ]
         indexes = [
-            GistIndex(fields=["time_range"]),
+            GistIndex(fields=['time_range']),
         ]
 
     def save(self, *args, **kwargs):
@@ -121,13 +121,13 @@ class Booking(models.Model):
 
         # Generate reference
         if not self.reference:
-            self.reference = str(uuid.uuid4()).replace("-", "")[:12].upper()
+            self.reference = str(uuid.uuid4()).replace('-', '')[:12].upper()
 
         super().save(*args, **kwargs)
 
     def __str__(self):
         return (
-            f"{self.name} - {self.table} "
-            f"@ {self.start_time.strftime('%Y-%m-%d %H:%M')} | "
-            f"Ref: {self.reference} | Status: {self.status}"
+            f'{self.name} - {self.table} '
+            f'@ {self.start_time.strftime('%Y-%m-%d %H:%M')} | '
+            f'Ref: {self.reference} | Status: {self.status}'
         )
