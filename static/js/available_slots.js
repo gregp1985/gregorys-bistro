@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 data.slots.forEach(slot => {
                     const option = document.createElement('option');
                     option.value = slot.value;
-                    option.textContent = slot.label.split('-')[0].trim();
+                    option.textContent = slot.label
                     slotField.appendChild(option);
                 });
             });

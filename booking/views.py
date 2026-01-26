@@ -32,8 +32,7 @@ def available_slots(request):
         data.append({
             'value': f'{slot_time.isoformat()}|{table.pk}',
             'label': (
-                f'{slot_time.strftime('%H:%M')} – '
-                f'{(slot_time + SLOT_DURATION).strftime('%H:%M')}'
+                f'{slot_time.strftime("%H:%M")}'
             )
         })
 

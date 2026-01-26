@@ -50,20 +50,20 @@ class BookingForm(forms.ModelForm):
         except Exception:
             return
 
-        slots = get_available_slots(
-            selected_date,
-            party_size,
-            exclude_bookings=self.instance if self.instance.pk else None,
-        )
+        # slots = get_available_slots(
+        #     selected_date,
+        #     party_size,
+        #     exclude_bookings=self.instance if self.instance.pk else None,
+        # )
 
-        choices = []
-        for slot_time, tables in slots:
-            table = tables[0]
-            value = f'{slot_time.isoformat()}|{table.pk}'
-            label = slot_time.strftime('%H:%M')
-            choices.append((value, label))
+        # choices = []
+        # for slot_time, tables in slots:
+        #     table = tables[0]
+        #     value = f'{slot_time.isoformat()}|{table.pk}'
+        #     label = slot_time.strftime('%H:%M')
+        #     choices.append((value, label))
 
-        self.fields['slot'].choices = choices
+        # self.fields['slot'].choices = choices
 
     def clean(self):
         cleaned_data = super().clean()
