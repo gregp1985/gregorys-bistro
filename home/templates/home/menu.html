@@ -3,100 +3,100 @@
 {% block content %}
 
     <!-- Page Header -->
-    <section class="container text-center mb-5">
-        <img src='{% static "images/logo.png" %}' alt="Gregorys Bistro Logo" width="150" class="mb-3">
+    <section class='container text-center mb-5'>
+        <img src='{% static "images/logo.png" %}' alt='Gregorys Bistro Logo' width='150' class='mb-3'>
         <br>
         <h1>Our Menu</h1>
-        <p class="lead mt-3">
+        <p class='lead mt-3'>
             Seasonal ingredients, thoughtfully prepared
         </p>
     </section>
 
     <!-- PDF Menu Download -->
-    <div class="text-center mb-4">
-        <button id="downloadPdf" class="btn btn-bistro btn-bdr mb-3">
-            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download PDF Menu
+    <div class='text-center mb-4'>
+        <button id='downloadPdf' class='btn btn-bistro btn-bdr mb-3'>
+            <i class='bi bi-file-earmark-pdf-fill me-2'></i> Download PDF Menu
         </button>
     </div>
     <!-- Filter Buttons -->
-    <section class="container mb-5">
-        <div class="text-center mb-4">
-            <button class="btn btn-bistro me-2 filter-btn active" data-filter="all">All</button>
-            <button class="btn btn-bistro me-2 filter-btn" data-filter="starters">Starters</button>
-            <button class="btn btn-bistro me-2 filter-btn" data-filter="mains">Main Courses</button>
-            <button class="btn btn-bistro me-2 filter-btn" data-filter="desserts">Desserts</button>
-            <button class="btn btn-bistro me-2 filter-btn" data-filter="drinks">Drinks</button>
+    <section class='container mb-5'>
+        <div class='text-center mb-4'>
+            <button class='btn btn-bistro me-2 filter-btn active' data-filter='all'>All</button>
+            <button class='btn btn-bistro me-2 filter-btn' data-filter='starters'>Starters</button>
+            <button class='btn btn-bistro me-2 filter-btn' data-filter='mains'>Main Courses</button>
+            <button class='btn btn-bistro me-2 filter-btn' data-filter='desserts'>Desserts</button>
+            <button class='btn btn-bistro me-2 filter-btn' data-filter='drinks'>Drinks</button>
         </div>
 
         <!-- Starters -->
-        <div class="menu-category" data-category="starters">
-            <h2 class="mb-3">Starters</h2>
-            <div class="menu-item">
-                <span class="item-name">Artisan Bread & Olive Oil</span>
-                <span class="item-price">£6</span>
+        <div class='menu-category' data-category='starters'>
+            <h2 class='mb-3'>Starters</h2>
+            <div class='menu-item'>
+                <span class='item-name'>Artisan Bread & Olive Oil</span>
+                <span class='item-price'>£6</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">French Onion Soup</span>
-                <span class="item-price">£9</span>
+            <div class='menu-item'>
+                <span class='item-name'>French Onion Soup</span>
+                <span class='item-price'>£9</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Seasonal Salad</span>
-                <span class="item-price">£8</span>
+            <div class='menu-item'>
+                <span class='item-name'>Seasonal Salad</span>
+                <span class='item-price'>£8</span>
             </div>
         </div>
 
         <!-- Main Courses -->
-        <div class="menu-category" data-category="mains">
-            <h2 class="mb-3">Main Courses</h2>
-            <div class="menu-item">
-                <span class="item-name">Grilled Salmon</span>
-                <span class="item-price">£24</span>
+        <div class='menu-category' data-category='mains'>
+            <h2 class='mb-3'>Main Courses</h2>
+            <div class='menu-item'>
+                <span class='item-name'>Grilled Salmon</span>
+                <span class='item-price'>£24</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Beef Bourguignon</span>
-                <span class="item-price">£26</span>
+            <div class='menu-item'>
+                <span class='item-name'>Beef Bourguignon</span>
+                <span class='item-price'>£26</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Mushroom Risotto</span>
-                <span class="item-price">£21</span>
+            <div class='menu-item'>
+                <span class='item-name'>Mushroom Risotto</span>
+                <span class='item-price'>£21</span>
             </div>
         </div>
 
         <!-- Desserts -->
-        <div class="menu-category" data-category="desserts">
-            <h2 class="mb-3">Desserts</h2>
-            <div class="menu-item">
-                <span class="item-name">Crème Brûlée</span>
-                <span class="item-price">£8</span>
+        <div class='menu-category' data-category='desserts'>
+            <h2 class='mb-3'>Desserts</h2>
+            <div class='menu-item'>
+                <span class='item-name'>Crème Brûlée</span>
+                <span class='item-price'>£8</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Chocolate Torte</span>
-                <span class="item-price">£9</span>
+            <div class='menu-item'>
+                <span class='item-name'>Chocolate Torte</span>
+                <span class='item-price'>£9</span>
             </div>
         </div>
 
         <!-- Drinks -->
-        <div class="menu-category" data-category="drinks">
-            <h2 class="mb-3">Drinks</h2>
-            <div class="menu-item">
-                <span class="item-name">House Red / White Wine</span>
-                <span class="item-price">£7 / £9</span>
+        <div class='menu-category' data-category='drinks'>
+            <h2 class='mb-3'>Drinks</h2>
+            <div class='menu-item'>
+                <span class='item-name'>House Red / White Wine</span>
+                <span class='item-price'>£7 / £9</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Craft Beer</span>
-                <span class="item-price">£6</span>
+            <div class='menu-item'>
+                <span class='item-name'>Craft Beer</span>
+                <span class='item-price'>£6</span>
             </div>
-            <div class="menu-item">
-                <span class="item-name">Espresso / Cappuccino</span>
-                <span class="item-price">£4 / £5</span>
+            <div class='menu-item'>
+                <span class='item-name'>Espresso / Cappuccino</span>
+                <span class='item-price'>£4 / £5</span>
             </div>
         </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="text-center my-5">
+    <section class='text-center my-5'>
         <h2>Ready to Dine?</h2>
-        <p class="mb-4">
+        <p class='mb-4'>
             Pair our menu with a warm evening at Gregorys Bistro.
         </p>
         {% if user.is_authenticated %}
@@ -116,5 +116,5 @@
     <!-- Custom script to generate PDF -->
     <script src='{% static "js/generate-pdf.js" %}'></script>
     <!-- jsPDF library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'></script>
 {% endblock %}

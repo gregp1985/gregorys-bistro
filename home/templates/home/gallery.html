@@ -3,41 +3,41 @@
 {% block content %}
 
     <!-- Page Header -->
-    <section class="container text-center my-5">
+    <section class='container text-center my-5'>
         <h2>Our Gallery</h2>
-        <p class="lead mt-3">
+        <p class='lead mt-3'>
             A glimpse into our dishes, drinks, and warm atmosphere
         </p>
     </section>
 
     <!-- Gallery Grid -->
-    <section class="container gallery mb-5">
-        <div class="row g-4">
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/dish1.jpg" %}' class="img-fluid" alt="Signature Dish">
+    <section class='container gallery mb-5'>
+        <div class='row g-4'>
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/dish1.jpg" %}' class='img-fluid' alt='Signature Dish'>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/dish2.jpg" %}'  class="img-fluid" alt="Chef Special">
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/dish2.jpg" %}'  class='img-fluid' alt='Chef Special'>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/dessert.jpg" %}' class="img-fluid" alt="Dessert">
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/dessert.jpg" %}' class='img-fluid' alt='Dessert'>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/interior.jpg" %}' class="img-fluid" alt="Bistro Interior">
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/interior.jpg" %}' class='img-fluid' alt='Bistro Interior'>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/chef.jpg" %}' class="img-fluid" alt="Wine Selection">
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/chef.jpg" %}' class='img-fluid' alt='Wine Selection'>
             </div>
-            <div class="col-sm-6 col-md-4">
-                <img src='{% static "images/wine.jpg" %}' class="img-fluid" alt="Chef at Work">
+            <div class='col-sm-6 col-md-4'>
+                <img src='{% static "images/wine.jpg" %}' class='img-fluid' alt='Chef at Work'>
             </div>
         </div>
     </section>
 
     <!-- Call to Action -->
-    <section class="text-center my-5">
+    <section class='text-center my-5'>
         <h2>Dine With Us</h2>
-        <p class="mb-4">
+        <p class='mb-4'>
             Experience these moments in person — book your table today.
         </p>
         {% if user.is_authenticated %}
