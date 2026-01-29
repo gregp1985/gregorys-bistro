@@ -29,7 +29,6 @@ DEBUG = False
 ALLOWED_HOSTS = ['.herokuapp.com',
                  '127.0.0.1',]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -54,6 +53,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
