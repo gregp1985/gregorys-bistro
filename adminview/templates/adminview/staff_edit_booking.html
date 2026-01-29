@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>*STAFF*Edit booking</h1>
+
+<p><strong>Ref:</strong> {{ booking.id }}</p>
+<p>
+  <strong>Date:</strong> {{ booking.start_time|date:'F j, Y' }}<br>
+  <strong>Time:</strong> {{ booking.start_time|time:'H:i' }}<br>
+  <strong>Party:</strong> {{ booking.party_size }}
+</p>
+
+<form 
+    method='post'
+    id='booking-form'
+    data-booking-id='{{ booking.id }}'
+>
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <button type='submit'>Save changes</button>
+  <a href='{% url "adminview:reservations" %}'>Back</a>
+</form>
+
+{% endblock %}
+{% block extras %}
+<script src='{% static "js/available_slots.js" %}'></script>
+{% endblock %}

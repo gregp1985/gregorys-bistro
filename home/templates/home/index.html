@@ -7,13 +7,23 @@
     <!-- Hero Section -->
     <section class='hero'>
         <div class='container'>
-            <h1>Welcome to Gregorys Bistro</h1>
-            <p class='lead mt-3'>
-                Where comforting flavors meet elegant dining
-            </p>
-            <a href='booking.html' class='btn btn-bistro btn-lg mt-4'>
-                Book a Table
-            </a>
+            <div class='hero-text'>
+                <h1>Welcome to Gregory's Bistro</h1>
+                <p clas='lead mt-3'>
+                    Where comforting flavors meet elegant dining
+                </p>
+            </div>
+            <div>
+                {% if user.is_authenticated %}
+                <a href='{% url "booking:booking" %}' class='btn btn-bistro btn-lg mt-4'>
+                    Book a Table
+                </a>
+                {% else %}
+                <a href='{% url "account_login" %}' class='btn btn-bistro btn-lg mt-4'>
+                    Login to Book
+                </a>
+                {% endif %}
+            </div>
         </div>
     </section>
 
@@ -21,7 +31,7 @@
     <section class='container my-5'>
         <div class='row align-items-center'>
             <div class='col-md-6 mb-4 mb-md-0'>
-                <img src='assets/images/interior.jpg' class='img-fluid rounded shadow' alt='Gregorys Bistro Interior'>
+                <img src='{% static "images/interior.jpg" %}' class='img-fluid rounded shadow int-img' alt='Gregorys Bistro Interior'>
             </div>
             <div class='col-md-6'>
                 <h2>Our Story</h2>
@@ -43,15 +53,15 @@
         <h2 class='text-center mb-4'>Featured Dishes</h2>
         <div class='row g-4'>
             <div class='col-md-4'>
-                <img src='assets/images/dish1.jpg' class='img-fluid rounded shadow' alt='Signature Dish'>
+                <img src='{% static "images/dish1.jpg" %}' class='img-fluid rounded shadow dish-img' alt='Signature Dish'>
                 <h5 class='mt-3 text-center'>Signature Entrée</h5>
             </div>
             <div class='col-md-4'>
-                <img src='assets/images/dish2.jpg' class='img-fluid rounded shadow' alt='Chef Special'>
+                <img src='{% static "images/dish2.jpg" %}' class='img-fluid rounded shadow dish-img' alt='Chef Special'>
                 <h5 class='mt-3 text-center'>Chef’s Special</h5>
             </div>
             <div class='col-md-4'>
-                <img src='assets/images/dessert.jpg' class='img-fluid rounded shadow' alt='Dessert'>
+                <img src='{% static "images/dessert.jpg" %}' class='img-fluid rounded shadow dish-img' alt='Dessert'>
                 <h5 class='mt-3 text-center'>House Dessert</h5>
             </div>
         </div>
@@ -59,13 +69,19 @@
 
     <!-- Call to Action -->
     <section class='text-center my-5'>
-        <h2>Reserve Your Experience</h2>
+        <h2>Book your table now!</h2>
         <p class='mb-4'>
             Tables fill up quickly — secure yours today.
         </p>
-        <a href='booking.html' class='btn btn-bistro btn-lg'>
-            Make a Reservation
+        {% if user.is_authenticated %}
+        <a href='{% url "booking:booking" %}' class='btn btn-bistro btn-bdr btn-lg mt-4'>
+            Book a Table
         </a>
+        {% else %}
+        <a href='{% url "account_login" %}' class='btn btn-bistro btn-bdr btn-lg mt-4'>
+            Login to Book
+        </a>
+        {% endif %}
     </section>
 
 <!-- index.html content ends here -->

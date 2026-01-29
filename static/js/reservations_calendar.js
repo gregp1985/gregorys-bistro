@@ -10,8 +10,16 @@ document.addEventListener('DOMContentLoaded', function () {
     locale: 'en-gb',
 
     initialView: 'timeGridWeek',
+    navLinks: true,
+    eventInteractive: true,
     nowIndicator: true,
     height: 'auto',
+
+    headerToolbar: {
+    right: 'prev,next',
+    center: 'title',
+    left: 'today timeGridDay,timeGridWeek'
+    },
 
     slotMinTime: '11:00:00',
     slotMaxTime: '23:00:00',
@@ -22,11 +30,31 @@ document.addEventListener('DOMContentLoaded', function () {
     month: '2-digit'
     },
 
+    dateClick: function(info) {
+      calendar.changeView('timeGridDay', info.dateStr);
+    },
+
     events: eventsUrl,
 
     eventClick: function(info) {
-      window.location.href =
-        adminChangeUrl.replace('BOOKING_ID', info.event.id);
+      info.jsEvent.preventDefault();
+
+      const event = info.event;
+
+      const modal = document.getElementById('booking-modal');
+      modal.querySelector('.ref').textContent = event.extendedProps.reference;
+      modal.querySelector('.time').textContent =
+      event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      modal.querySelector('.party').textContent = event.extendedProps.party_size;
+      modal.querySelector('.status').textContent = event.extendedProps.status;
+      modal.querySelector('.allergies').textContent =
+      event.extendedProps.allergies || 'None';
+
+      const editBtn = modal.querySelector('.edit-btn');
+
+      editBtn.href = editBtn.dataset.editUrl.replace('/0/', `/${event.id}/`);
+
+      modal.classList.add('open');
     },
 
     eventDidMount: function(info) {

@@ -9,6 +9,31 @@
   data-admin-change-url='/admin/booking/booking/BOOKING_ID/change/'
 ></div>
 
+<div id='booking-modal' class='modal'>
+  <div class='modal-content'>
+    <h3>Booking details</h3>
+
+    <p><strong>Ref:</strong> <span class='ref'></span></p>
+    <p><strong>Time:</strong> <span class='time'></span></p>
+    <p><strong>Party size:</strong> <span class='party'></span></p>
+    <p><strong>Status:</strong> <span class='status'></span></p>
+    <p><strong>Allergies:</strong> <span class='allergies'></span></p>
+
+    <div class='actions'>
+      <a
+        class='edit-btn'
+        href='#'
+        data-edit-url='{% url "adminview:staff_edit_booking" 0 %}'
+      >
+        Edit booking
+      </a>
+      <button onclick='this.closest(".modal").classList.remove("open")'>
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+
 <link
   href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css'
   rel='stylesheet'
