@@ -89,6 +89,26 @@ body {
   max-width: 500px;
 }
 
+/* Menu */
+.menu-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    position: relative;
+}
+
+.menu-item .item-name {
+    flex: 1;
+    border-bottom: 1px dotted #5a3e2b;
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.menu-item .item-price {
+    white-space: nowrap;
+    padding-left: 0.5rem;
+}
 /* Footer */
 footer {
   background-color: var(--warm-brown);

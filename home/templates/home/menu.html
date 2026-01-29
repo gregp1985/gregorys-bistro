@@ -3,7 +3,9 @@
 {% block content %}
 
     <!-- Page Header -->
-    <section class="container text-center my-5">
+    <section class="container text-center mb-5">
+        <img src='{% static "images/logo.png" %}' alt="Gregorys Bistro Logo" width="150" class="mb-3">
+        <br>
         <h1>Our Menu</h1>
         <p class="lead mt-3">
             Seasonal ingredients, thoughtfully prepared
@@ -12,8 +14,6 @@
 
     <!-- PDF Menu Download -->
     <div class="text-center mb-4">
-        <img src='{% static "images/logo.png" %}' alt="Gregorys Bistro Logo" width="120" class="mb-3">
-        <br>
         <button id="downloadPdf" class="btn btn-bistro btn-bdr mb-3">
             <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download PDF Menu
         </button>
