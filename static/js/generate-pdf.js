@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
     const { jsPDF } = window.jspdf;
 
-    const downloadBtn = document.getElementById("downloadPdf");
+    const downloadBtn = document.getElementById('downloadPdf');
 
-    downloadBtn.addEventListener("click", () => {
-        const doc = new jsPDF({ unit: "pt", format: "a4" });
+    downloadBtn.addEventListener('click', () => {
+        const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
         const pageWidth = doc.internal.pageSize.getWidth();
         const pageHeight = doc.internal.pageSize.getHeight();
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Page Background
         const drawBackground = () => {
             doc.setFillColor(179, 141, 60); 
-            doc.rect(0, 0, pageWidth, pageHeight, "F");
+            doc.rect(0, 0, pageWidth, pageHeight, 'F');
         };
 
         // Page Border
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const logo = new Image();
         logo.src = '../static/images/logo.png';
         logo.onload = () => {
-            doc.addImage(logo, "PNG", pageWidth / 2 - 60, 10, 120, 120); // center top
+            doc.addImage(logo, 'PNG', pageWidth / 2 - 60, 10, 120, 120); // center top
             contentStartY = 10 + 120 + 30 
             yPos = contentStartY;
 
@@ -57,9 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
             // Title
             doc.setFontSize(22);
             doc.setTextColor(150, 60, 0); // warm brown
-            doc.text("Menu", pageWidth / 2, yPos, { align: "center" });
+            doc.text('Menu', pageWidth / 2, yPos, { align: 'center' });
 
-            const titleWidth = doc.getTextWidth("Menu");
+            const titleWidth = doc.getTextWidth('Menu');
             doc.setDrawColor(90, 62, 43);
             doc.setLineWidth(1);
             doc.line(
@@ -74,12 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
             doc.setFontSize(12);
             doc.setTextColor(150, 60, 0); // warm brown
 
-            const categories = document.querySelectorAll(".menu-category");
+            const categories = document.querySelectorAll('.menu-category');
 
             categories.forEach(cat => {
-                if (cat.style.display === "none") return;
+                if (cat.style.display === 'none') return;
 
-                const categoryTitle = cat.querySelector("h2").textContent;
+                const categoryTitle = cat.querySelector('h2').textContent;
                 // Category Title
                 doc.setFontSize(18);
                 doc.setTextColor(150, 60, 0);
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     categoryTitle,
                     contentX + contentWidth / 2,
                     yPos,
-                    { align: "center" }
+                    { align: 'center' }
                 );
 
                 yPos += 10;
@@ -108,11 +108,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 doc.setFontSize(14);
                 doc.setTextColor(120, 80, 40);
 
-                const items = cat.querySelectorAll(".menu-item");
+                const items = cat.querySelectorAll('.menu-item');
                 
                 items.forEach(item => {
-                    const name = item.querySelector(".item-name").textContent;
-                    const price = item.querySelector(".item-price").textContent;
+                    const name = item.querySelector('.item-name').textContent;
+                    const price = item.querySelector('.item-price').textContent;
  
                     doc.text(name, contentX + contentWidth / 2, yPos, { align:'center'});
                     doc.text(
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 yPos += 24; // space between categories
             });
 
-            doc.save("Gregorys_Bistro_Menu.pdf");
+            doc.save('Gregorys_Bistro_Menu.pdf');
         }
     });
 });
