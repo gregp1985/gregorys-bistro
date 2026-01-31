@@ -10,11 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+from django.contrib.messages import constants as messages
 from pathlib import Path
 import os
 import dj_database_url
-import certifi
-import ssl
 if os.path.isfile('env.py'):
     import env
 
@@ -26,7 +25,7 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.herokuapp.com',
                  '127.0.0.1',]
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+PASSWORD_RESET_REDIRECT_URL = "/accounts/login/"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,6 +120,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
+
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_UNIQUE_EMAIL = True
@@ -155,4 +159,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'a13d60001@smtp-brevo.com'
 EMAIL_HOST_PASSWORD = os.environ.get('BREVO_KEY')
-DEFAULT_FROM_EMAIL = 'Gregorys Bistro <gregorys.bistro.2026@gmail.com'
+DEFAULT_FROM_EMAIL = 'Gregorys Bistro <gregorys.bistro.2026@gmail.com>'

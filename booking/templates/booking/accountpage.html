@@ -2,14 +2,20 @@
 {% load static %}
 {% block content %}
 
-<h2>Account</h2>
+<div class="container mx-auto" style="max-width: 800px">
+    <div class="row">
+        <div class="col-md-8 mt-3">
+            <h3>Account</h3>
 
-<div>
-    <p><strong>Username: </strong>{{ user }}</p>
+            <div>
+                <p><strong>Username: </strong>{{ user }}</p>
+            </div>
+            <div>
+                <p><strong>Email: </strong>{{ user.email }}</p>
+            </div>
+            <a href="{% url 'account_email' %}" class='btn btn-bistro btn-sm btn-bdr mt-4'>Change Email</a>
+            <a href="{% url 'account_change_password' %}" class='btn btn-bistro btn-sm btn-bdr mt-4'>Change Password</a>
+        </div>
+    </div>
 </div>
-<div>
-    <p><strong>Email: </strong>{{ user.email }}</p>
-</div>
-<a href="{% url 'account_email' %}" class='btn btn-bistro btn-lg btn-bdr mt-4'>Change Email</a>
-<a href="{% url 'account_change_password' %}" class='btn btn-bistro btn-lg btn-bdr mt-4'>Change Password</a>
 {% endblock %}

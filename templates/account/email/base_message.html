@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: Arial, sans-serif;">
+    <p>Hello from <strong>{{ current_site.name }}</strong> 👋</p>
+
+    {% block content %}{% endblock %}
+
+    <hr>
+    <p>
+      Thank you for choosing <strong>{{ current_site.name }}</strong><br>
+      <a href="https://{{ current_site.domain }}">{{ current_site.domain }}</a>
+    </p>
+  </body>
+</html>
