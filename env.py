@@ -11,3 +11,7 @@ os.environ.setdefault(
 os.environ.setdefault(
     'BREVO_KEY', 'xsmtpsib-a8e04b98a88780a1a157fe3688d576da92bb825389ef219afbee4611c6fb7d98-NbumgVyUEaIoNfx7'
 )
+
+os.environ.setdefault(
+    'CLOUDINARY_URL', 'cloudinary://348827389641386:a7M3dnPwrt2UorcT7UN5ZaPOfkc@divziizzk'
+)
