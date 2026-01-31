@@ -87,7 +87,12 @@ body {
   background-color: #5a3e2b;
   color: var(--accent-gold);
 }
-
+.link-brn {
+  color: #5a3e2b;
+}
+.link-brn:hover {
+  color: #926912;
+}
 /* Images */
 .int-img {
   max-width: 500px;

@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<div class="container mx-auto" style="max-width: 800px;">
+<div class='container mx-auto' style='max-width: 800px;'>
 
     <h2>Contact Us</h2>
     
@@ -30,24 +30,24 @@
     </div>
     <hr>
     <p>If you'd like to send us a message with your request or question please feel free to use the form below:</p>
-    <form method="post" class="mt-4">
+    <form method='post' class='mt-4'>
         {% csrf_token %}
 
         {{ form.non_field_errors }}
 
-        <div class="mb-3">
+        <div class='mb-3'>
             {{ form.email.label_tag }}
             {{ form.email }}
             {{ form.email.errors }}
         </div>
 
-        <div class="mb-3">
+        <div class='mb-3'>
             {{ form.message.label_tag }}
             {{ form.message }}
             {{ form.message.errors }}
         </div>
 
-        <button type="submit" class="btn btn-bistro btn-bdr">
+        <button type='submit' class='btn btn-bistro btn-bdr'>
             Send Message
         </button>
     </form>
