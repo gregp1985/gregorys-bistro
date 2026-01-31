@@ -10,6 +10,7 @@
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
 {% url 'accountpage' as accountpage_url %}
+{% url 'admin' as admin_url %}
 
 <!DOCTYPE html>
 <html lang='en'>
@@ -46,6 +47,9 @@
                     {% endif %}
                     {% if user.is_authenticated and user.is_staff %}
                     <li class='nav-item'><a class='nav-link {% if request.path == reservations_url %}active' aria-current='page{% endif %}' href='{% url "adminview:reservations" %}'>Reservations</a></li>
+                    {% endif %}
+                    {% if user.is_superuser %}
+                    <li class='nav-item'><a class='nav-link {% if request.path == admin_url %}active' aria-current='page{% endif %}' href='{% url "admin:index" %}'>Admin</a></li>
                     {% endif %}
                     {% if user.is_authenticated %}
                     <li class='nav-item'><a class='nav-link {% if request.path == accountpage_url %}active' aria-current='page{% endif %}' href='{% url "booking:accountpage" %}'>| {{ user }} |</a></li>
