@@ -7,3 +7,7 @@ os.environ.setdefault(
 os.environ.setdefault(
     'SECRET_KEY', 'fdyu3f&tblbb=^3#*ip!6#q1tbwgatji5e$*wze)fungcf9opb'
 )
+
+os.environ.setdefault(
+    'BREVO_KEY', 'xsmtpsib-a8e04b98a88780a1a157fe3688d576da92bb825389ef219afbee4611c6fb7d98-NbumgVyUEaIoNfx7'
+)

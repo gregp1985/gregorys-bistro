@@ -157,3 +157,8 @@ def edit_booking(request, booking_id):
             'editing': True,
         }
     )
+
+
+@login_required
+def accountpage(request):
+    return render(request, 'booking/accountpage.html')

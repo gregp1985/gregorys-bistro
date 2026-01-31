@@ -49,6 +49,10 @@ body {
   color: var(--accent-gold) !important;
 }
 
+.text-gold {
+  color: #b38d3c;
+}
+
 /* Headings */
 .hero {
   background-image: url('../images/hero.jpg');
