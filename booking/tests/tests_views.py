@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 from booking.models import Booking, Table, OpeningHours
-from booking.constants import SLOT_DURATION
 
 
 class BookingViewTests(TestCase):
