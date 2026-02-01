@@ -108,16 +108,17 @@ class Booking(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        if self.start_time and timezone.is_naive(self.start_time):
-            self.start_time = timezone.make_aware(
-                self.start_time,
-                timezone.get_current_timezone(),
-            )
+        if self.start_time:
+            if timezone.is_naive(self.start_time):
+                self.start_time = timezone.make_aware(
+                    self.start_time,
+                    timezone.get_current_timezone(),
+                )
 
-        self.time_range = (
-            self.start_time,
-            self.start_time + SLOT_DURATION
-        )
+            self.time_range = (
+                self.start_time,
+                self.start_time + SLOT_DURATION
+            )
 
         # Generate reference
         if not self.reference:

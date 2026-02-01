@@ -30,23 +30,29 @@ def get_available_slots(date, party_size=1, exclude_bookings=None):
     current = start
 
     while current <= end:
+        # Don’t allow booking in the past
         if date == now.date() and current <= now:
             current += INTERVAL
             continue
-        free_tables = Table.objects.filter(
-            seats__gte=party_size
-        ).exclude(
-            bookings__start_time__lt=current + SLOT_DURATION,
-            bookings__start_time__gte=current,
+
+        candidate_end = current + SLOT_DURATION
+
+        available_tables = (
+            Table.objects
+            .filter(seats__gte=party_size)
+            .exclude(
+                bookings__time_range__overlap=(current, candidate_end)
+            )
         )
 
+        # Used when editing an existing booking
         if exclude_bookings:
-            free_tables = free_tables.exclude(
-                bookings__id=exclude_bookings.id
+            available_tables = available_tables.exclude(
+                bookings__in=exclude_bookings
             )
 
-        if free_tables.exists():
-            slots.append((current, list(free_tables)))
+        if available_tables.exists():
+            slots.append((current))
 
         current += INTERVAL
 

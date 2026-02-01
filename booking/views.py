@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
 from django.utils.timezone import localtime
-from datetime import datetime
+from django.utils.dateparse import parse_date
 from .forms import BookingForm
 from .models import Booking
 from .utils import get_available_slots
@@ -12,38 +12,43 @@ from .utils import get_available_slots
 
 @login_required
 def available_slots(request):
-    date = request.GET.get('date')
+    date_str = request.GET.get('date')
     party_size = request.GET.get('party_size')
     exclude_id = request.GET.get('exclude')
 
-    if not date or not party_size:
+    if not date_str or not party_size:
         return JsonResponse({'slots': []})
 
-    date = datetime.fromisoformat(date).date()
-    party_size = int(party_size)
+    date = parse_date(date_str)
+    if not date:
+        return JsonResponse({'slots': []})
 
-    exclude_booking = None
+    try:
+        party_size = int(party_size)
+    except (TypeError, ValueError):
+        return JsonResponse({'slots': []})
+
+    # Used when editing an existing booking
+    exclude_bookings = None
     if exclude_id:
-        exclude_booking = Booking.objects.filter(
+        exclude_bookings = Booking.objects.filter(
             id=exclude_id,
-            name=request.user
-        ).first()
-
-    slots = get_available_slots(
-        date,
-        party_size,
-        exclude_bookings=exclude_booking,
+            name=request.user,
         )
 
-    data = []
-    for slot_time, tables in slots:
-        table = tables[0]
-        data.append({
-            'value': f'{slot_time.isoformat()}|{table.pk}',
-            'label': (
-                f'{slot_time.strftime("%H:%M")}'
-            )
-        })
+    slots = get_available_slots(
+        date=date,
+        party_size=party_size,
+        exclude_bookings=exclude_bookings,
+    )
+
+    data = [
+        {
+            'value': slot.isoformat(),
+            'label': slot.strftime('%H:%M'),
+        }
+        for slot in slots
+    ]
 
     return JsonResponse({'slots': data})
 
@@ -93,7 +98,6 @@ def cancel_booking(request, booking_id):
 @staff_member_required(login_url='account_login')
 def booking_calendar_data(request):
     """
-    JSON endpoint consumed by FullCalendar.
     Returns bookings as calendar events.
     """
 

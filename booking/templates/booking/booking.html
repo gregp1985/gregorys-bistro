@@ -3,54 +3,58 @@
 
 {% block content %}
 <div class='booking-page container mx-auto' style='max-width: 800px;'>
+
   {% if editing %}
     <h3>Editing Booking</h3>
-        <p>
-      <strong>Reference:</strong> {{ form.instance.id }}
-    </p>
-    <p>
-      <strong>Date:</strong>
-      {{ form.instance.start_time|date:'F j, Y' }}
-    </p>
-    <p>
-      <strong>Time:</strong>
-      {{ form.instance.start_time|time:'H:i' }}
-    </p>
-    <p>
-      <strong>Number of people:</strong>
-      {{ form.instance.party_size }}
-    </p>
-  </div>
+    <p><strong>Reference:</strong> {{ form.instance.reference }}</p>
+    <p><strong>Current Date:</strong> {{ form.instance.start_time|date:'F j, Y' }}</p>
+    <p><strong>Current Time:</strong> {{ form.instance.start_time|time:'H:i' }}</p>
+    <p><strong>Current Party Size:</strong> {{ form.instance.party_size }}</p>
+    <hr>
   {% else %}
     <h3>Make a Booking</h3>
   {% endif %}
+
   <!-- BOOKING FORM -->
   <section class='booking-form'>
-    <form method='post'
-          id='booking-form'
-          {% if editing %}data-booking-id='{{ form.instance.id|default:"" }}'{% endif %}>
+    <form
+      method='post'
+      id='booking-form'
+      {% if editing %}
+        data-booking-id='{{ form.instance.id }}'
+      {% endif %}
+    >
       {% csrf_token %}
+
       <div>
-        <div>Date:</div>
-        <div>{{ form.date }}</div>
+        <label>Date:</label>
+        {{ form.date }}
       </div>
+
       <div>
-        <div>Number of People:</div>
-        <div>{{ form.party_size }}</div>
+        <label>Number of People:</label>
+        {{ form.party_size }}
       </div>
+
       <div>
-        <div>Time:</div>
-        <div>{{ form.slot }}</div>
+        <!-- <label>Time:</label>
+        {{ form.slot }} -->
+        <select name='slot' id='id_slot' required>
+            <option value=''>Select a time</option>
+        </select>
       </div>
+
       <div>
-        <div>Allergies?:</div>
-        <div>{{ form.allergies }}</div>
+        <label>Allergies?</label>
+        {{ form.allergies }}
       </div>
+
       {{ form.non_field_errors }}
 
       {% for field in form %}
         {{ field.errors }}
       {% endfor %}
+
       <button class='btn btn-bistro btn-sm btn-bdr mt-4' type='submit'>
         {% if editing %}
           Amend booking
@@ -59,77 +63,79 @@
         {% endif %}
       </button>
     </form>
- 
   </section>
 
-  <!-- MY BOOKINGS -->
+  <!-- PAST BOOKINGS -->
   {% if past_bookings %}
     <section class='my-bookings'>
       <h2>My Past Bookings</h2>
-
       <ul class='booking-list'>
         {% for booking in past_bookings %}
           <li class='booking-item'>
-            <div class='booking-details'>
-              <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
-              at {{ booking.start_time|time:'H:i' }}
-              <br>
-              ({{ booking.party_size }} people)
-              {% if booking.status == 'CANCELLED' %}
-                <span class='status cancelled'>--Cancelled--</span>
-              {% endif %}
-            </div>
+            <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
+            at {{ booking.start_time|time:'H:i' }}
+            ({{ booking.party_size }} people).<br>
+            Booking ref#{{ booking.reference }}
+            {% if booking.status == 'CANCELLED' %}
+              <span class='status cancelled'>--Cancelled--</span>
+            {% endif %}
           </li>
         {% endfor %}
       </ul>
     </section>
   {% endif %}
-{% if upcoming_bookings %}
+
+  <!-- UPCOMING BOOKINGS -->
+  {% if upcoming_bookings %}
     <section class='my-bookings'>
       <h2>My Upcoming Bookings</h2>
-
       <ul class='booking-list'>
         {% for booking in upcoming_bookings %}
           <li class='booking-item'>
             <div class='booking-details'>
               <strong>{{ booking.start_time|date:'D d M Y' }}</strong>
               at {{ booking.start_time|time:'H:i' }}
-              <br>
-              ({{ booking.party_size }} people)
-              {% if booking.status == 'CANCELLED' %}
-                <span class='status cancelled'>--Cancelled--</span>
-              {% endif %}
+              ({{ booking.party_size }} people). <br>
+              Booking ref#{{ booking.reference }}
             </div>
 
             <div class='booking-actions'>
-                
-                {% if booking.status != 'CANCELLED' %}
-                  <a class='btn btn-bistro btn-sm btn-bdr mt-4' href='{% url "booking:edit_booking" booking.id %}'>Edit</a>
-                {% endif %}
-                
-                <form
-                    method='post'
-                    action='{% url "booking:cancel_booking" booking.id %}'
-                    style='display:inline'
-                    onsubmit='return confirm("Are you sure you want to cancel this booking?");'
+              {% if booking.status != 'CANCELLED' %}
+                <a
+                  class='btn btn-bistro btn-sm btn-bdr mt-4'
+                  href="{% url 'booking:edit_booking' booking.id %}"
                 >
-                    {% csrf_token %}
-                    {% if booking.status != 'CANCELLED' %}
-                        <button class='btn btn-bistro btn-sm btn-bdr mt-4' type='submit'>Cancel</button>
-                    {% else %}
-                        <p class='text-muted'>
-                            This booking has been cancelled and cannot be modified.
-                        </p>
-                    {% endif %}
-                </form>
+                  Edit
+                </a>
+              {% endif %}
+
+              <form
+                method='post'
+                action='{% url "booking:cancel_booking" booking.id %}'
+                style='display:inline'
+                onsubmit='return confirm("Are you sure you want to cancel this booking?");'
+              >
+                {% csrf_token %}
+                {% if booking.status != 'CANCELLED' %}
+                  <button class='btn btn-bistro btn-sm btn-bdr mt-4' type='submit'>
+                    Cancel
+                  </button>
+                {% else %}
+                  <p class='text-muted'>
+                    This booking has been cancelled and cannot be modified.
+                  </p>
+                {% endif %}
+              </form>
             </div>
           </li>
         {% endfor %}
       </ul>
     </section>
   {% endif %}
+
 </div>
 {% endblock %}
+
 {% block extras %}
 <script src='{% static "js/available_slots.js" %}'></script>
 {% endblock %}

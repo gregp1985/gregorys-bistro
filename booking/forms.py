@@ -1,9 +1,11 @@
+from datetime import datetime
 from django import forms
 from django.utils import timezone
-from django.utils.dateparse import parse_datetime
-from datetime import datetime
+from django.utils.dateparse import parse_date
+from django.core.exceptions import ValidationError
 from .models import Booking, Table
 from .utils import get_available_slots
+from .constants import SLOT_DURATION
 
 
 class BookingForm(forms.ModelForm):
@@ -19,26 +21,30 @@ class BookingForm(forms.ModelForm):
     slot = forms.ChoiceField(
         label='Time',
         choices=[],
-        required=False,
+        required=True,
     )
 
     class Meta:
         model = Booking
-        fields = ['party_size', 'allergies']
+        exclude = (
+            'start_time',
+            'end_time',
+            'table',
+            'name',
+            'status',
+        )
         widgets = {
-            'allergies': forms.Textarea(
-                attrs={
-                    'rows': 2,
-                }
-            )
+            'allergies': forms.Textarea(attrs={'rows': 2})
         }
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
+        self.instance = kwargs.get('instance')
         super().__init__(*args, **kwargs)
 
+        # Let AJAX populate on GET
         if not self.is_bound:
-            return  # GET request → AJAX handles display
+            return
 
         selected_date = self.data.get('date')
         party_size = self.data.get('party_size')
@@ -47,35 +53,29 @@ class BookingForm(forms.ModelForm):
             return
 
         try:
-            selected_date = datetime.fromisoformat(selected_date).date()
+            selected_date = parse_date(selected_date)
             party_size = int(party_size)
-        except (ValueError, TypeError):
+        except (TypeError, ValueError):
             return
 
-        slots = get_available_slots(selected_date, party_size)
+        if not selected_date:
+            return
+
+        # Used when editing an existing booking
+        exclude_bookings = None
+        if self.instance and self.instance.pk:
+            exclude_bookings = Booking.objects.filter(pk=self.instance.pk)
+
+        slots = get_available_slots(
+            date=selected_date,
+            party_size=party_size,
+            exclude_bookings=exclude_bookings,
+        )
 
         self.fields['slot'].choices = [
-            (
-                f'{slot_time.isoformat()}|{tables[0].pk}',
-                slot_time.strftime('%H:%M'),
-            )
-            for slot_time, tables in slots
+            (slot.isoformat(), slot.strftime('%H:%M'))
+            for slot in slots
         ]
-
-        # slots = get_available_slots(
-        #     selected_date,
-        #     party_size,
-        #     exclude_bookings=self.instance if self.instance.pk else None,
-        # )
-
-        # choices = []
-        # for slot_time, tables in slots:
-        #     table = tables[0]
-        #     value = f'{slot_time.isoformat()}|{table.pk}'
-        #     label = slot_time.strftime('%H:%M')
-        #     choices.append((value, label))
-
-        # self.fields['slot'].choices = choices
 
     def clean(self):
         cleaned_data = super().clean()
@@ -85,25 +85,48 @@ class BookingForm(forms.ModelForm):
             return cleaned_data
 
         try:
-            start_iso, table_pk = slot_value.split('|')
-            start_dt = parse_datetime(start_iso)
+            start_dt = datetime.fromisoformat(slot_value)
 
             if timezone.is_naive(start_dt):
                 start_dt = timezone.make_aware(start_dt)
 
-            cleaned_data['start_time'] = start_dt
-            cleaned_data['table'] = Table.objects.get(pk=table_pk)
+        except Exception as e:
+            raise ValidationError('Invalid time slot selected.')
 
-        except Exception:
-            raise forms.ValidationError('Invalid booking slot selected.')
+        cleaned_data['start_time'] = start_dt
+        cleaned_data['end_time'] = start_dt + SLOT_DURATION
 
         return cleaned_data
 
     def save(self, commit=True):
+        if 'start_time' not in self.cleaned_data:
+            raise forms.ValidationError(
+                'Please select a valid booking time.'
+            )
+
         booking = super().save(commit=False)
         booking.start_time = self.cleaned_data['start_time']
-        booking.table = self.cleaned_data['table']
+        booking.end_time = self.cleaned_data['end_time']
+        booking.party_size = self.cleaned_data['party_size']
         booking.name = self.user
+
+        booking.table = (
+            Table.objects
+            .filter(seats__gte=booking.party_size)
+            .exclude(
+                bookings__time_range__overlap=(
+                    booking.start_time,
+                    booking.end_time,
+                )
+            )
+            .order_by('seats')
+            .first()
+        )
+
+        if not booking.table:
+            raise forms.ValidationError(
+                'That time is no longer available. Please choose another.'
+            )
 
         if commit:
             booking.save()

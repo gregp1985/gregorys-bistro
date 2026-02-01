@@ -3,8 +3,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateField = document.getElementById('id_date');
     const partyField = document.getElementById('id_party_size');
     const slotField = document.getElementById('id_slot');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
     function loadSlots() {
+        submitBtn.disabled = true;
         const date = dateField.value;
         const party = partyField.value;
         const bookingId = form?.dataset.bookingId;
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        let url = `/booking/available-slots/?date=${date}&party_size=${party}`
+        let url = `/booking/available-slots/?date=${date}&party_size=${party}`;
         if (bookingId) {
             url += `&exclude=${bookingId}`;
         }
@@ -27,19 +29,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (!data.slots || data.slots.length === 0) {
                     const opt = document.createElement('option');
                     opt.textContent = 'No availability';
+                    opt.value = '';
                     slotField.appendChild(opt);
+                    submitBtn.disabled = true;
                     return;
                 }
 
                 data.slots.forEach(slot => {
                     const option = document.createElement('option');
                     option.value = slot.value;
-                    option.textContent = slot.label
+                    option.textContent = slot.label;
                     slotField.appendChild(option);
                 });
+                submitBtn.disabled = false;
+            })
+            .catch(() => {
+                slotField.innerHTML = '';
+                const opt = document.createElement('option');
+                opt.textContent = 'Error loading availability';
+                opt.disabled = true;
+                slotField.appendChild(opt);
+                submitBtn.disabled = true;
             });
     }
 
     dateField.addEventListener('change', loadSlots);
     partyField.addEventListener('change', loadSlots);
+
+    loadSlots();
 });
