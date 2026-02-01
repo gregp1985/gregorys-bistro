@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logo.src = '../static/images/logo.png';
         logo.onload = () => {
             doc.addImage(logo, 'PNG', pageWidth / 2 - 60, 10, 120, 120); // center top
-            contentStartY = 10 + 120 + 30 
+            contentStartY = 10 + 120 + 30;
             yPos = contentStartY;
 
             drawMenu();
