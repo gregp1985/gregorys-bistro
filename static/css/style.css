@@ -93,8 +93,11 @@ body {
   color: #926912;
 }
 /* Images */
+
 .int-img {
-  max-width: 500px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Menu */
@@ -133,4 +136,95 @@ footer {
   padding: 20px 0px;
   text-align: center;
   margin-top: 60px;
+}
+
+/* Optimise for different screens */
+
+/* Screens below 992px */
+@media (max-width:992px) {
+  body {
+    width: 100%;
+    margin: 0;
+    padding: 0 1rem;
+  }
+}
+/* Mobile styles */
+@media (max-width: 768px) {
+
+  /* Layout */
+  body {
+    width: 100%;
+    margin: 0;
+    padding: 0 1rem;
+  }
+
+  /* Typography */
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
+
+  p,
+  li {
+    font-size: 1rem;
+  }
+
+  /* Navbar */
+  .logo-img {
+    max-width: 120px;
+  }
+
+  .navbar {
+    padding: 0.5rem 1rem;
+  }
+
+  .navbar-nav {
+    text-align: center;
+  }
+
+  /* Forms */
+  .booking-page,
+  .form-bkg {
+    width: 100%;
+  }
+
+  input,
+  select,
+  textarea,
+  button,
+  .btn {
+    width: 100%;
+  }
+
+ 
+
+  /* Modal */
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  /* Calendar */
+  #calendar {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  section {
+    margin-bottom: 2rem;
+  }
+
+  .btn-lg {
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+  }
 }
