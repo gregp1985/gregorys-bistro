@@ -1,6 +1,7 @@
 from datetime import datetime, time
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from booking.models import Booking, Table, OpeningHours
 from booking.constants import SLOT_DURATION
@@ -52,3 +53,21 @@ class BookingModelTests(TestCase):
             booking.time_range[1],
             booking.start_time + SLOT_DURATION
         )
+
+    def test_booking_outside_opening_hours_raises_validation_error(self):
+        """
+        Test that booking outside of Opening Hours fails with a Validation Error
+        """
+        early_time = timezone.make_aware(
+            datetime(2026, 2, 2, 9, 0)
+        )
+
+        booking = Booking(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=early_time,
+        )
+
+        with self.assertRaises(ValidationError):
+            booking.clean()
