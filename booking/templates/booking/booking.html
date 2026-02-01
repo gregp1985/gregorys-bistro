@@ -27,24 +27,24 @@
       {% csrf_token %}
 
       <div>
-        <label>Date:</label>
+        <label class='form-bkg'>Date:</label>
         {{ form.date }}
       </div>
 
       <div>
-        <label>Number of People:</label>
+        <label class='form-bkg'>Number of People:</label>
         {{ form.party_size }}
       </div>
 
       <div>
-        <label>Time:</label>
+        <label  class='form-bkg'>Time:</label>
         <select name='slot' id='id_slot' required>
-            <option value=''>Select a time</option>
+          <option value=''>Select a time</option>
         </select>
       </div>
 
       <div>
-        <label>Allergies?</label>
+        <label class='form-bkg'>Allergies?</label>
         {{ form.allergies }}
       </div>
 
@@ -67,7 +67,7 @@
   <!-- PAST BOOKINGS -->
   {% if past_bookings %}
     <section class='my-bookings'>
-      <h2>My Past Bookings</h2>
+      <h3>My Past Bookings</h3>
       <ul class='booking-list'>
         {% for booking in past_bookings %}
           <li class='booking-item'>
@@ -87,7 +87,7 @@
   <!-- UPCOMING BOOKINGS -->
   {% if upcoming_bookings %}
     <section class='my-bookings'>
-      <h2>My Upcoming Bookings</h2>
+      <h3>My Upcoming Bookings</h3>
       <ul class='booking-list'>
         {% for booking in upcoming_bookings %}
           <li class='booking-item'>

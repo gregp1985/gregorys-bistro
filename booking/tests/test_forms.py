@@ -10,6 +10,10 @@ from booking.models import Booking, Table, OpeningHours
 class BookingFormTests(TestCase):
 
     def setUp(self):
+        """
+        Setup of User, Tables, Opening Hours and dates and
+        times for the rest of the tests
+        """
         self.user = User.objects.create_user(
             username='testuser',
             password='password123'
@@ -33,6 +37,10 @@ class BookingFormTests(TestCase):
         )
 
     def test_form_valid_data_creates_booking(self):
+        """
+        Test to confirm the form is valid when valid
+        data is entered in it and submitted
+        """
         form = BookingForm(
             data={
                 'date': self.date,
@@ -57,6 +65,9 @@ class BookingFormTests(TestCase):
         self.assertIsNotNone(booking.table)
 
     def test_form_invalid_without_slot(self):
+        """
+        Test to confirm the form is not valid if a slot is not selected
+        """
         form = BookingForm(
             data={
                 'date': self.date,
@@ -70,6 +81,9 @@ class BookingFormTests(TestCase):
         self.assertIn('slot', form.errors)
 
     def test_form_raises_error_when_no_tables_available(self):
+        """
+        Test that an error is raised if no tables are available on a set day
+        """
         Booking.objects.create(
             table=self.table,
             name=self.user,
@@ -106,6 +120,10 @@ class BookingFormTests(TestCase):
             form.save()
 
     def test_edit_booking_excludes_self_from_overlap_check(self):
+        """
+        Test to check that when editing a booking the original booking is
+        excluded from the overlap check
+        """
         booking = Booking.objects.create(
             table=self.table,
             name=self.user,

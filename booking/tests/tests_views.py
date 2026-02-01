@@ -111,6 +111,9 @@ class BookingViewTests(TestCase):
 
     # Make Booking
     def test_make_booking_page_loads(self):
+        """
+        Test to ensure the make booking poage loads correctly
+        """
         url = reverse('booking:booking')
 
         response = self.client.get(url)
@@ -119,6 +122,9 @@ class BookingViewTests(TestCase):
         self.assertContains(response, 'Make a Booking')
 
     def test_make_a_booking_creates_booking(self):
+        """
+        Test to check a booking is actually created on valid submission
+        """
         url = reverse('booking:booking')
 
         response = self.client.post(url, {
@@ -138,6 +144,9 @@ class BookingViewTests(TestCase):
 
     # Cancel Booking
     def test_cancel_booking_sets_status(self):
+        """
+        Test to check that when a user cancels a booking the status is changed
+        """
         booking = Booking.objects.create(
             table=self.table,
             name=self.user,
@@ -158,6 +167,9 @@ class BookingViewTests(TestCase):
         self.assertEqual(booking.status, 'CANCELLED')
 
     # Edit Booking
+    """
+    Test to check the edit booking page loads correctly
+    """
     def test_edit_booking_page_loads(self):
         booking = Booking.objects.create(
             table=self.table,
@@ -177,6 +189,10 @@ class BookingViewTests(TestCase):
         self.assertContains(response, 'Editing Booking')
 
     def test_edit_booking_updates_time(self):
+        """
+        Test to check that if the edit booking time is updated and saved,
+        it updates the booking
+        """
         booking = Booking.objects.create(
             table=self.table,
             name=self.user,

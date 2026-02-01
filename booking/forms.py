@@ -104,13 +104,13 @@ class BookingForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        if "start_time" not in self.cleaned_data:
-            raise forms.ValidationError("Please select a valid booking time.")
+        if 'start_time' not in self.cleaned_data:
+            raise forms.ValidationError('Please select a valid booking time.')
 
         booking = super().save(commit=False)
 
-        booking.start_time = self.cleaned_data["start_time"]
-        booking.party_size = self.cleaned_data["party_size"]
+        booking.start_time = self.cleaned_data['start_time']
+        booking.party_size = self.cleaned_data['party_size']
         booking.name = self.user
 
         start = booking.start_time
@@ -120,7 +120,7 @@ class BookingForm(forms.ModelForm):
 
         # Bookings that would conflict with this slot (ignore CANCELLED)
         conflict_bookings = Booking.objects.filter(
-            status="BOOKED",
+            status='BOOKED',
             time_range__overlap=(start, end),
         )
 
@@ -132,11 +132,11 @@ class BookingForm(forms.ModelForm):
         table_qs = table_qs.exclude(bookings__in=conflict_bookings)
 
         # Pick the smallest suitable table
-        booking.table = table_qs.order_by("seats").first()
+        booking.table = table_qs.order_by('seats').first()
 
         if booking.table_id is None:
             raise forms.ValidationError(
-                "That time is no longer available. Please choose another."
+                'That time is no longer available. Please choose another.'
             )
 
         if commit:
@@ -148,23 +148,23 @@ class BookingForm(forms.ModelForm):
 class BookingAdminForm(forms.ModelForm):
     cancellation_reason = forms.CharField(
         required=False,
-        widget=forms.Textarea(attrs={"rows": 3}),
-        help_text="Optional reason sent to the customer",
-        label="Cancellation reason",
+        widget=forms.Textarea(attrs={'rows': 3}),
+        help_text='Optional reason sent to the customer',
+        label='Cancellation reason',
     )
 
     class Meta:
         model = Booking
-        fields = "__all__"
+        fields = '__all__'
 
     def clean(self):
         cleaned_data = super().clean()
-        status = cleaned_data.get("status")
-        reason = cleaned_data.get("cancellation_reason")
+        status = cleaned_data.get('status')
+        reason = cleaned_data.get('cancellation_reason')
 
-        if status == "CANCELLED" and not reason:
+        if status == 'CANCELLED' and not reason:
             raise forms.ValidationError(
-                "Please provide a cancellation reason."
+                'Please provide a cancellation reason.'
             )
 
         return cleaned_data

@@ -16,25 +16,25 @@ class BookingAdmin(admin.ModelAdmin):
     field filters and fields to prepopulate.
     """
     list_display = (
-        "reference",
-        "start_time",
-        "name",
-        "party_size",
-        "status",
+        'reference',
+        'start_time',
+        'name',
+        'party_size',
+        'status',
     )
 
     list_filter = (
-        "start_time",
-        "name",
+        'start_time',
+        'name',
     )
 
     search_fields = (
-        "reference",
-        "name__username",
-        "name__email",
+        'reference',
+        'name__username',
+        'name__email',
     )
 
-    date_hierarchy = "start_time"
+    date_hierarchy = 'start_time'
 
     form = BookingAdminForm
 
@@ -44,7 +44,7 @@ class BookingAdmin(admin.ModelAdmin):
             try:
                 previous_status = (
                     Booking.objects
-                    .only("status")
+                    .only('status')
                     .get(pk=obj.pk)
                     .status
                 )
@@ -55,36 +55,36 @@ class BookingAdmin(admin.ModelAdmin):
 
         if (
             change
-            and previous_status != "CANCELLED"
-            and obj.status == "CANCELLED"
+            and previous_status != 'CANCELLED'
+            and obj.status == 'CANCELLED'
             and obj.name.email
         ):
 
-            reason = form.cleaned_data.get("cancellation_reason")
+            reason = form.cleaned_data.get('cancellation_reason')
 
             context = {
-                "user": obj.name,
-                "booking": obj,
-                "reason": reason,
+                'user': obj.name,
+                'booking': obj,
+                'reason': reason,
             }
 
             message = render_to_string(
-                "account/email/cancellation_notification.txt",
+                'account/email/cancellation_notification.txt',
                 context,
             )
 
             send_mail(
                 subject=(
-                    "Gregory's Bistro: "
-                    f"Booking cancelled - Ref {obj.reference}"
+                    'Gregorys Bistro: '
+                    f'Booking cancelled - Ref {obj.reference}'
                 ),
                 message=message,
-                from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', None),
                 recipient_list=[obj.name.email],
                 fail_silently=False,
             )
 
             messages.success(
                 request,
-                f"Cancellation email sent to {obj.name.email}.",
+                f'Cancellation email sent to {obj.name.email}.',
             )

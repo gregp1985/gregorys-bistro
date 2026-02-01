@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 
-<h1>Reservations</h1>
+<h3 class='text-center'>Reservations</h3>
 <div
   id='calendar'
   data-events-url='{% url "booking:booking_calendar_data" %}'
@@ -27,13 +27,15 @@
       >
         Edit booking
       </a>
-      <button class='btn btn btn-bistro btn-sm btn-bdr mt-4' onclick='this.closest(".modal").classList.remove("open")'>
+      <button class='btn btn-bistro btn-sm btn-bdr mt-4' onclick='this.closest(".modal").classList.remove("open")'>
         Close
       </button>
     </div>
   </div>
 </div>
 
+{% endblock %}
+{% block extras %}
 <link
   href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css'
   rel='stylesheet'
@@ -41,5 +43,4 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 
 <script src='{% static "js/reservations_calendar.js" %}'></script>
-
 {% endblock %}
