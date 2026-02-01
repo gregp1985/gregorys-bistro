@@ -42,6 +42,7 @@ class BookingViewTests(TestCase):
             datetime(2026, 2, 2, 13, 0)
         )
 
+    # Available Slots
     def test_available_slots_returns_slots(self):
         """
         Test that the available slots view returns slots
@@ -58,3 +59,69 @@ class BookingViewTests(TestCase):
         data = response.json()
         self.assertIn('slots', data)
         self.assertTrue(len(data['slots']) > 0)
+
+    def test_available_slots_returns_empty_for_invalid_date(self):
+        """
+        Test to make sure no slots returned for invalid date
+        """
+        url = reverse('booking:available_slots')
+
+        response = self.client.get(url, {
+            'date': 'invalid-date',
+            'party_size': 2,
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['slots'], [])
+
+    def test_available_slots_excludes_existing_booking(self):
+        """
+        Test to ensure available slots exclude existing bookings
+        """
+        Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        url = reverse('booking:available_slots')
+
+        response = self.client.get(url, {
+            'date': self.monday_date.isoformat(),
+            'party_size': 2,
+        })
+
+        slots = [
+            slot['value']
+            for slot in response.json()['slots']
+        ]
+
+        self.assertNotIn(self.start_time.isoformat(), slots)
+
+    # Make Booking
+    def test_make_booking_page_loads(self):
+        url = reverse('booking:booking')
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Make a Booking')
+
+    def test_make_a_booking_creates_booking(self):
+        url = reverse('booking:booking')
+
+        response = self.client.post(url, {
+            'date': self.monday_date.isoformat(),
+            'party_size': 2,
+            'slot': self.start_time.isoformat(),
+            'allergies': 'Peanuts',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Booking.objects.count(), 1)
+
+        booking = Booking.objects.first()
+        self.assertEqual(booking.name, self.user)
+        self.assertEqual(booking.party_size, 2)
+        self.assertEqual(booking.start_time, self.start_time)
