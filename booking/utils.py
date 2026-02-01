@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.utils import timezone
+from django.db.models import Q
 from .constants import SLOT_DURATION, INTERVAL
 
 
@@ -35,21 +36,20 @@ def get_available_slots(date, party_size=1, exclude_bookings=None):
             current += INTERVAL
             continue
 
-        candidate_end = current + SLOT_DURATION
+        booking_end = current + SLOT_DURATION
+
+        overlap_q = Q(
+            bookings__time_range__overlap=(current, booking_end)
+        )
+
+        if exclude_bookings:
+            overlap_q &= ~Q(bookings__in=exclude_bookings)
 
         available_tables = (
             Table.objects
             .filter(seats__gte=party_size)
-            .exclude(
-                bookings__time_range__overlap=(current, candidate_end)
-            )
+            .exclude(overlap_q)
         )
-
-        # Used when editing an existing booking
-        if exclude_bookings:
-            available_tables = available_tables.exclude(
-                bookings__in=exclude_bookings
-            )
 
         if available_tables.exists():
             slots.append(current)

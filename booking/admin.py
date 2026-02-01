@@ -8,6 +8,10 @@ admin.site.register(Table)
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+    """
+    Lists fields for display in admin, fields for search,
+    field filters and fields to prepopulate.
+    """
     list_display = (
         "reference",
         "start_time",
