@@ -126,6 +126,12 @@ Gregory’s Bistro is a restaurant website with a fully automated online table b
 
 ## Testing
 
+### HTML, Javascript and CSS and Lighthouse
+
+All have been parsed through HTML, CSS and Javascript validators respectively and no problems were found.
+
+Lighthouse returned figures of 90 for Accessibility and 100 for Best Practice. Due to an issue with Lighthouse it was not able to return a Performance score.
+
 ### Automated Testing
 
 Automated tests were written using Django’s built-in testing framework.
@@ -136,6 +142,9 @@ Automated tests cover:
 - Valid time slot selection
 - Editing bookings without triggering false overlap errors
 - Prevention of overlapping bookings
+- Available Slot Generation
+- Booking to Table allocation
+- Cancellation of Bookings
 
 All automated tests pass successfully.
 
@@ -151,6 +160,8 @@ The table below can be used as a checklist to confirm functionality.
 |-------|------|----------------|--------|
 | Account registration | Register with valid email | Verification email sent | Pass |
 | Email verification | Click verification link | Account activated | Pass |
+| Change Password | Allows User to change password when logged in | Password changed | Pass |
+| Reset Password | Allows unauthenticated user to reset password by email | Password reset | Pass |
 | Login required | Access booking page while logged out | Only visible when logged in | Pass |
 | View gallery/menu | Navigate site pages | Content displays correctly | Pass |
 | Create booking | Select date, party size, slot | Booking created successfully | Pass |
@@ -163,6 +174,7 @@ The table below can be used as a checklist to confirm functionality.
 | Staff reservations | Login as staff | All bookings visible | Pass |
 | Staff edit booking | Edit booking as staff | Booking updates | Pass |
 | Admin access | Login as admin | Admin panel accessible | Pass |
+| Admin Cancel Booking | Emails user cancellation notice | Email received | Pass |
 | Admin filtering | Filter bookings in admin | Results filtered correctly | Pass |
 
 ---
