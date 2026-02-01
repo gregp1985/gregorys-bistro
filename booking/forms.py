@@ -143,3 +143,28 @@ class BookingForm(forms.ModelForm):
             booking.save()
 
         return booking
+
+
+class BookingAdminForm(forms.ModelForm):
+    cancellation_reason = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 3}),
+        help_text="Optional reason sent to the customer",
+        label="Cancellation reason",
+    )
+
+    class Meta:
+        model = Booking
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get("status")
+        reason = cleaned_data.get("cancellation_reason")
+
+        if status == "CANCELLED" and not reason:
+            raise forms.ValidationError(
+                "Please provide a cancellation reason."
+            )
+
+        return cleaned_data

@@ -1,0 +1,16 @@
+Hello {{ user.get_username }},
+
+Your booking at Gregory’s Bistro has been cancelled by the restaurant.
+
+Reference: {{ booking.reference }}
+Date & time: {{ booking.start_time|date:"Y-m-d H:i" }}
+Party size: {{ booking.party_size }}
+
+{% if reason %}
+Reason provided:
+{{ reason }}
+{% endif %}
+
+If you have any questions, please contact the restaurant.
+
+Gregory’s Bistro
