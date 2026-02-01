@@ -52,7 +52,7 @@ def get_available_slots(date, party_size=1, exclude_bookings=None):
             )
 
         if available_tables.exists():
-            slots.append((current))
+            slots.append(current)
 
         current += INTERVAL
 

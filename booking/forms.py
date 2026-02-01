@@ -28,7 +28,6 @@ class BookingForm(forms.ModelForm):
         model = Booking
         exclude = (
             'start_time',
-            'end_time',
             'table',
             'name',
             'status',
@@ -94,7 +93,6 @@ class BookingForm(forms.ModelForm):
             raise ValidationError('Invalid time slot selected.')
 
         cleaned_data['start_time'] = start_dt
-        cleaned_data['end_time'] = start_dt + SLOT_DURATION
 
         return cleaned_data
 
@@ -106,7 +104,6 @@ class BookingForm(forms.ModelForm):
 
         booking = super().save(commit=False)
         booking.start_time = self.cleaned_data['start_time']
-        booking.end_time = self.cleaned_data['end_time']
         booking.party_size = self.cleaned_data['party_size']
         booking.name = self.user
 
@@ -116,7 +113,7 @@ class BookingForm(forms.ModelForm):
             .exclude(
                 bookings__time_range__overlap=(
                     booking.start_time,
-                    booking.end_time,
+                    booking.start_time + SLOT_DURATION,
                 )
             )
             .order_by('seats')
