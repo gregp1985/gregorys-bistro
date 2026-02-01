@@ -1,9 +1,10 @@
 from datetime import datetime, time
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from booking.forms import BookingForm
-from booking.models import Table, OpeningHours
+from booking.models import Booking, Table, OpeningHours
 
 
 class BookingFormTests(TestCase):
@@ -54,3 +55,78 @@ class BookingFormTests(TestCase):
         self.assertEqual(booking.party_size, 2)
         self.assertEqual(booking.start_time, self.start_time)
         self.assertIsNotNone(booking.table)
+
+    def test_form_invalid_without_slot(self):
+        form = BookingForm(
+            data={
+                'date': self.date,
+                'party_size': 2,
+                'allergies': '',
+            },
+            user=self.user
+        )
+
+        self.assertFalse(form.is_valid())
+        self.assertIn('slot', form.errors)
+
+    def test_form_raises_error_when_no_tables_available(self):
+        Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+        Booking.objects.create(
+            table=self.table2,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        form = BookingForm(
+            data={
+                'date': self.date,
+                'party_size': 2,
+                'slot': self.start_time.isoformat(),
+                'allergies': '',
+            },
+            user=self.user
+        )
+
+        form.fields['slot'].choices = [
+            (self.start_time.isoformat(), self.start_time.isoformat())
+        ]
+
+        self.assertTrue(form.is_valid())
+
+        with self.assertRaisesMessage(
+            ValidationError,
+            'That time is no longer available'
+        ):
+            form.save()
+
+    def test_edit_booking_excludes_self_from_overlap_check(self):
+        booking = Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        form = BookingForm(
+            data={
+                'date': self.date.isoformat(),
+                'party_size': 2,
+                'slot': self.start_time.isoformat(),
+                'allergies': '',
+            },
+            instance=booking,
+            user=self.user
+        )
+
+        self.assertTrue(form.is_valid())
+
+        updated_booking = form.save()
+
+        self.assertEqual(updated_booking.start_time, self.start_time)
+        self.assertEqual(updated_booking.table, self.table)

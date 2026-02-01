@@ -2,10 +2,8 @@ from datetime import datetime, time, timedelta
 from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth.models import User
-
 from booking.models import Table, OpeningHours, Booking
 from booking.utils import get_available_slots
-from booking.constants import SLOT_DURATION
 
 
 class GetAvailableSlotsTests(TestCase):
@@ -48,7 +46,8 @@ class GetAvailableSlotsTests(TestCase):
 
     def test_no_slots_when_no_tables_big_enough(self):
         """
-        Tests that if no tables are big enough for the party size no slots are returned
+        Tests that if no tables are big enough for
+        the party size no slots are returned
         """
         slots = get_available_slots(
             date=self.date,

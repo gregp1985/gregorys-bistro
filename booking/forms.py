@@ -71,6 +71,13 @@ class BookingForm(forms.ModelForm):
             exclude_bookings=exclude_bookings,
         )
 
+        if self.instance and self.instance.pk and self.instance.start_time:
+            slots = list(slots)
+            if self.instance.start_time not in slots:
+                slots.append(self.instance.start_time)
+
+        slots = sorted(slots)
+
         self.fields['slot'].choices = [
             (slot.isoformat(), slot.strftime('%H:%M'))
             for slot in slots
@@ -97,35 +104,39 @@ class BookingForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        if 'start_time' not in self.cleaned_data:
-            raise forms.ValidationError(
-                'Please select a valid booking time.'
-            )
+        if "start_time" not in self.cleaned_data:
+            raise forms.ValidationError("Please select a valid booking time.")
 
         booking = super().save(commit=False)
-        booking.start_time = self.cleaned_data['start_time']
-        booking.party_size = self.cleaned_data['party_size']
+
+        booking.start_time = self.cleaned_data["start_time"]
+        booking.party_size = self.cleaned_data["party_size"]
         booking.name = self.user
 
-        table_exc = Table.objects.filter(
-            seats__gte=booking.party_size
+        start = booking.start_time
+        end = booking.start_time + SLOT_DURATION
+
+        table_qs = Table.objects.filter(seats__gte=booking.party_size)
+
+        # Bookings that would conflict with this slot (ignore CANCELLED)
+        conflict_bookings = Booking.objects.filter(
+            status="BOOKED",
+            time_range__overlap=(start, end),
         )
 
+        # When editing, exclude the booking itself from the conflict check
         if booking.pk:
-            table_exc = table_exc.exclude(bookings=booking)
+            conflict_bookings = conflict_bookings.exclude(pk=booking.pk)
 
-        table_exc = table_exc.exclude(
-            bookings__time_range__overlap=(
-                booking.start_time,
-                booking.start_time + SLOT_DURATION,
-            )
-        )
+        # Exclude any table that has a conflicting booking
+        table_qs = table_qs.exclude(bookings__in=conflict_bookings)
 
-        booking.table = table_exc.order_by('seats').first()
+        # Pick the smallest suitable table
+        booking.table = table_qs.order_by("seats").first()
 
         if booking.table_id is None:
             raise forms.ValidationError(
-                'That time is no longer available. Please choose another.'
+                "That time is no longer available. Please choose another."
             )
 
         if commit:

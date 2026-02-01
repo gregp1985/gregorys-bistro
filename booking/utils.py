@@ -39,7 +39,8 @@ def get_available_slots(date, party_size=1, exclude_bookings=None):
         booking_end = current + SLOT_DURATION
 
         overlap_q = Q(
-            bookings__time_range__overlap=(current, booking_end)
+            bookings__status='BOOKED',
+            bookings__time_range__overlap=(current, booking_end),
         )
 
         if exclude_bookings:

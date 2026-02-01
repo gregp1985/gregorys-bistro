@@ -54,7 +54,7 @@ class BookingViewTests(TestCase):
 
         response = self.client.get(url, {
             'date': self.monday_date.isoformat(),
-            'party_size':2,
+            'party_size': 2,
         })
 
         self.assertEqual(response.status_code, 200)

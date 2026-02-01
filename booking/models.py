@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.postgres.indexes import GistIndex
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from .constants import SLOT_DURATION
@@ -101,6 +102,7 @@ class Booking(models.Model):
                     ('table', '='),
                     ('time_range', '&&'),
                 ],
+                condition=Q(status='BOOKED'),
             ),
         ]
         indexes = [
@@ -129,6 +131,6 @@ class Booking(models.Model):
     def __str__(self):
         return (
             f'{self.name} - {self.table} '
-            f'@ {self.start_time.strftime('%Y-%m-%d %H:%M')} | '
+            f'@ {self.start_time.strftime("%Y-%m-%d %H:%M")} | '
             f'Ref: {self.reference} | Status: {self.status}'
         )
