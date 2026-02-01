@@ -27,6 +27,10 @@ class BookingViewTests(TestCase):
             number=1,
             seats=4
         )
+        self.table2 = Table.objects.create(
+            number=2,
+            seats=4
+        )
 
         OpeningHours.objects.create(
             weekday=0,
@@ -85,6 +89,13 @@ class BookingViewTests(TestCase):
             start_time=self.start_time,
         )
 
+        Booking.objects.create(
+            table=self.table2,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
         url = reverse('booking:available_slots')
 
         response = self.client.get(url, {
@@ -125,3 +136,73 @@ class BookingViewTests(TestCase):
         self.assertEqual(booking.name, self.user)
         self.assertEqual(booking.party_size, 2)
         self.assertEqual(booking.start_time, self.start_time)
+
+    # Cancel Booking
+    def test_cancel_booking_sets_status(self):
+        booking = Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        url = reverse(
+            'booking:cancel_booking',
+            args=[booking.id]
+        )
+
+        response = self.client.post(url)
+
+        booking.refresh_from_db()
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(booking.status, 'CANCELLED')
+
+    # Edit Booking
+    def test_edit_booking_page_loads(self):
+        booking = Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        url = reverse(
+            'booking:edit_booking',
+            args=[booking.id]
+        )
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Editing Booking')
+
+    def test_edit_booking_updates_time(self):
+        booking = Booking.objects.create(
+            table=self.table,
+            name=self.user,
+            party_size=2,
+            start_time=self.start_time,
+        )
+
+        new_time = timezone.make_aware(
+            datetime(2026, 2, 2, 14, 0)
+        )
+
+        url = reverse(
+            'booking:edit_booking',
+            args=[booking.id]
+        )
+
+        response = self.client.post(url, {
+            'date': self.monday_date.isoformat(),
+            'party_size': 2,
+            'slot': new_time.isoformat(),
+            'allergies': '',
+        })
+
+        self.assertEqual(response.status_code, 302)
+
+        booking.refresh_from_db()
+
+        self.assertEqual(booking.start_time, new_time)

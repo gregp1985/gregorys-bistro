@@ -107,20 +107,23 @@ class BookingForm(forms.ModelForm):
         booking.party_size = self.cleaned_data['party_size']
         booking.name = self.user
 
-        booking.table = (
-            Table.objects
-            .filter(seats__gte=booking.party_size)
-            .exclude(
-                bookings__time_range__overlap=(
-                    booking.start_time,
-                    booking.start_time + SLOT_DURATION,
-                )
-            )
-            .order_by('seats')
-            .first()
+        table_exc = Table.objects.filter(
+            seats__gte=booking.party_size
         )
 
-        if not booking.table:
+        if booking.pk:
+            table_exc = table_exc.exclude(bookings=booking)
+
+        table_exc = table_exc.exclude(
+            bookings__time_range__overlap=(
+                booking.start_time,
+                booking.start_time + SLOT_DURATION,
+            )
+        )
+
+        booking.table = table_exc.order_by('seats').first()
+
+        if booking.table_id is None:
             raise forms.ValidationError(
                 'That time is no longer available. Please choose another.'
             )
