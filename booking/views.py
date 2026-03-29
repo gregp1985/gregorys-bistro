@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.utils.dateparse import parse_date
@@ -74,6 +75,7 @@ def make_booking(request):
 
     if request.method == 'POST' and form.is_valid():
         form.save()
+        messages.success(request, 'Booking created successfully!')
         return redirect('booking:booking')
 
     return render(
@@ -145,6 +147,7 @@ def edit_booking(request, booking_id):
         )
         if form.is_valid():
             form.save()
+            messages.success(request, 'Booking updated successfully!')
             return redirect('booking:booking')
     else:
         form = BookingForm(

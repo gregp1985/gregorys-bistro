@@ -46,6 +46,7 @@ def staff_edit_booking(request, booking_id):
         )
         if form.is_valid():
             form.save()
+            messages.success(request, 'Booking updated successfully!')
             return redirect('adminview:reservations')
     else:
         form = BookingForm(
