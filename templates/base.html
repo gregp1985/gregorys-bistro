@@ -6,6 +6,7 @@
 {% url 'home:gallery' as gallery_url %}
 {% url 'booking:booking' as booking_url %}
 {% url 'adminview:reservations' as reservations_url %}
+{% url 'adminview:cancellations' as cancellations_url %}
 {% url 'account_login' as login_url %}
 {% url 'account_signup' as signup_url %}
 {% url 'account_logout' as logout_url %}
@@ -94,6 +95,17 @@
                         <a class="nav-link" href="{{ reservations_url }}">
                         {% endif %}
                             Reservations
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.is_staff %}
+                    <li class='nav-item'>
+                        {% if request.path == cancellations_url %}
+                        <a class="nav-link active" aria-current="page" href="{{ cancellations_url }}">
+                        {% else %}
+                        <a class="nav-link" href="{{ cancellations_url }}">
+                        {% endif %}
+                            Cancellations
                         </a>
                     </li>
                     {% endif %}

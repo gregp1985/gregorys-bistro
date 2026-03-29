@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<h3 class='text-center'>Cancellations</h3>
+
+    {% for booking in bookings %}
+        <div class="booking-card">
+            <h4>Reference: {{ booking.reference }}</h4>
+            <p><strong>Name:</strong> {{ booking.name }}</p>
+            <p><strong>Date/Time:</strong> {{ booking.start_time }}</p>
+            <p><strong>Party Size:</strong> {{ booking.party_size }}</p>
+            <a class='delete-btn btn btn-bistro btn-sm btn-bdr mt-4' href="{% url 'adminview:staff_delete_booking' booking.id %}">Acknowledge & Delete</a>
+        </div>
+        <hr>
+    {% empty %}
+        <p>No cancelled bookings found.</p>
+    {% endfor %}
+
+{% endblock %}
+{% block extras %}
+
+{% endblock %}

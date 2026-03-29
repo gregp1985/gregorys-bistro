@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from booking.models import Booking
 from booking.forms import BookingForm
+
 
 @staff_member_required(login_url='account_login')
 def reservations_view(request):
@@ -10,6 +12,26 @@ def reservations_view(request):
     This is the page linked from the main navigation.
     """
     return render(request, 'adminview/reservations.html')
+
+
+@staff_member_required(login_url='account_login')
+def cancellations_view(request):
+    """
+    Staff-only Cancellations page.
+    This is the page linked from the main navigation.
+    """
+    bookings = Booking.objects.filter(status='CANCELLED')
+    return render(request, 'adminview/cancellations.html', {
+        'bookings': bookings
+    })
+
+
+@staff_member_required
+def staff_delete_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.delete()
+    messages.success(request, f'Booking {booking.reference} has been deleted.')
+    return redirect('adminview:cancellations')
 
 
 @staff_member_required
