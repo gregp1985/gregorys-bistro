@@ -21,7 +21,7 @@ def cancellations_view(request):
     Staff-only Cancellations page.
     This is the page linked from the main navigation.
     """
-    bookings = Booking.objects.filter(status='CANCELLED')
+    bookings = Booking.objects.filter(status__iexact='CANCELLED')
     return render(request, 'adminview/cancellations.html', {
         'bookings': bookings
     })
@@ -31,8 +31,8 @@ def cancellations_view(request):
 def staff_cancel_booking(request, booking_ref):
     booking = get_object_or_404(Booking, reference=booking_ref)
 
-    if request.method == "POST":
-        booking.status = 'Cancelled'
+    if request.method == 'POST':
+        booking.status = 'CANCELLED'
         booking.save()
         messages.success(
             request,
@@ -41,7 +41,7 @@ def staff_cancel_booking(request, booking_ref):
     else:
         messages.warning(
             request,
-            "Invalid request method. Booking not cancelled."
+            'Invalid request method. Booking not cancelled.'
         )
 
     return redirect('adminview:reservations')
