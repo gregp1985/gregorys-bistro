@@ -116,7 +116,7 @@ def booking_calendar_data(request):
     bookings = (
         Booking.objects
         .select_related('table', 'name')
-        .exclude(status='CANCELLED')
+        .exclude(status__iexact='CANCELLED')
     )
 
     events = []
@@ -124,7 +124,6 @@ def booking_calendar_data(request):
     for booking in bookings:
         start = localtime(booking.start_time)
         end = localtime(booking.time_range.upper)
-
         events.append({
             'id': booking.id,
             'title': f'Table {booking.table} - {booking.name}',
@@ -132,6 +131,8 @@ def booking_calendar_data(request):
             'end': end.isoformat(),
             'extendedProps': {
                 'reference': booking.reference,
+                'name': booking.name.get_full_name() or booking.name.username,
+                'table': str(booking.table),
                 'party_size': booking.party_size,
                 'status': booking.status,
                 'allergies': booking.allergies,

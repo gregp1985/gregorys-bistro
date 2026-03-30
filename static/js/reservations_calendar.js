@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const modal = document.getElementById('booking-modal');
       modal.querySelector('.ref').textContent = event.extendedProps.reference;
+      modal.querySelector('.name').textContent = event.extendedProps.name;
+      modal.querySelector('.table').textContent = event.extendedProps.table;
       modal.querySelector('.date').textContent = event.start.toLocaleDateString('en-GB', {
         weekday: 'short',  // optional, e.g., "Mon"
         day: '2-digit',
@@ -61,6 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
         hour: '2-digit',
         minute: '2-digit',
       });
+      
       modal.querySelector('.party').textContent = event.extendedProps.party_size;
       modal.querySelector('.status').textContent = event.extendedProps.status;
       modal.querySelector('.allergies').textContent =
