@@ -122,8 +122,8 @@ def booking_calendar_data(request):
     events = []
 
     for booking in bookings:
-        start = localtime(make_aware(booking.start_time))
-        end = localtime(make_aware(booking.time_range.upper))
+        start = localtime(booking.start_time)
+        end = localtime(booking.time_range.upper)
 
         events.append({
             'id': booking.id,
