@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.utils import timezone
-from django.utils.timezone import localtime
+from django.utils.timezone import localtime, make_aware
 from django.utils.dateparse import parse_date
 from .forms import BookingForm
 from .models import Booking
@@ -122,8 +122,8 @@ def booking_calendar_data(request):
     events = []
 
     for booking in bookings:
-        start = localtime(booking.start_time)
-        end = localtime(booking.time_range.upper)
+        start = localtime(make_aware(booking.start_time))
+        end = localtime(make_aware(booking.time_range.upper))
 
         events.append({
             'id': booking.id,
