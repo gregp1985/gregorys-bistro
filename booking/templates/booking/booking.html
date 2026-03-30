@@ -13,6 +13,7 @@
     <hr>
   {% else %}
     <h3>Make a Booking</h3>
+    <p><i>Select a Date and Party Size to show available times</i></p>
   {% endif %}
 
   <!-- BOOKING FORM -->
@@ -36,7 +37,7 @@
         {{ form.party_size }}
       </div>
 
-      <div>
+      <div id='slot-container' style='display:none;'>
         <label  class='form-bkg'>Time:</label>
         <select name='slot' id='id_slot' required>
           <option value=''>Select a time</option>

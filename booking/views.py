@@ -56,6 +56,16 @@ def available_slots(request):
 
 @login_required
 def make_booking(request):
+    # Redirect staff or superuser to staff booking page
+    if (
+        request.user.is_authenticated
+        and (
+            request.user.is_staff
+            or request.user.is_superuser
+        )
+    ):
+        return redirect('adminview:staff_booking')
+
     now = timezone.now()
 
     upcoming_bookings = Booking.objects.filter(
@@ -122,6 +132,7 @@ def booking_calendar_data(request):
             'end': end.isoformat(),
             'extendedProps': {
                 'reference': booking.reference,
+                'party_size': booking.party_size,
                 'status': booking.status,
                 'allergies': booking.allergies,
             }

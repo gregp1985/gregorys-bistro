@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('booking-form');
     const dateField = document.getElementById('id_date');
     const partyField = document.getElementById('id_party_size');
+    const userField = document.getElementById('id_name');
     const slotField = document.getElementById('id_slot');
     const submitBtn = form.querySelector('button[type="submit"]');
     const slotContainer = document.getElementById('slot-container');
@@ -10,14 +11,16 @@ document.addEventListener('DOMContentLoaded', function () {
         submitBtn.disabled = true;
         const date = dateField.value;
         const party = partyField.value;
+        const userId = userField.value;  // Get the user ID from the form
         const bookingId = form?.dataset.bookingId;
 
-        if (!date || !party) {
+        if (!date || !party || !userId) {
             slotField.innerHTML = '';
+            slotContainer.style.display = 'none';
             return;
         }
 
-        let url = `/booking/available-slots/?date=${date}&party_size=${party}`;
+        let url = `/booking/available-slots/?date=${date}&party_size=${party}&user=${userId}`;
         if (bookingId) {
             url += `&exclude=${bookingId}`;
         }
@@ -58,6 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     dateField.addEventListener('change', loadSlots);
     partyField.addEventListener('change', loadSlots);
+    userField.addEventListener('change', loadSlots);
 
     loadSlots();
 });

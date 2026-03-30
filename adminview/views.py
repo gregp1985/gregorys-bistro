@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
+from django.utils.dateparse import parse_datetime
 from booking.models import Booking
-from booking.forms import BookingForm
+from .forms import StaffBookingForm
 
 
 @staff_member_required(login_url='account_login')
@@ -35,30 +36,33 @@ def staff_delete_booking(request, booking_id):
 
 
 @staff_member_required
-def staff_edit_booking(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+def staff_booking(request, booking_id=None):
+    booking = None
+    if booking_id:
+        booking = get_object_or_404(Booking, id=booking_id)  # ✅ Load instance
 
     if request.method == 'POST':
-        form = BookingForm(
-            request.POST,
-            instance=booking,
-            user=booking.name,  # booking owner
-        )
+        form = StaffBookingForm(request.POST, instance=booking)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Booking updated successfully!')
+            new_booking = form.save(commit=False)
+            slot = request.POST.get('slot')
+            if slot:
+                start_datetime = parse_datetime(slot)
+                if start_datetime:
+                    new_booking.start_time = start_datetime
+            new_booking.name = form.cleaned_data['name']
+            new_booking.save()
+            messages.success(request, 'Booking saved successfully!')
             return redirect('adminview:reservations')
     else:
-        form = BookingForm(
-            instance=booking,
-            user=booking.name,
-        )
+        form = StaffBookingForm(instance=booking)  # ✅ pre-filled for GET
 
     return render(
         request,
-        'adminview/staff_edit_booking.html',
+        'adminview/staff_booking.html',
         {
             'form': form,
             'booking': booking,
+            'editing': True if booking else False
         }
     )

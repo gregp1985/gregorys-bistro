@@ -1,14 +1,23 @@
 from datetime import datetime
 from django import forms
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 from django.utils.dateparse import parse_date
 from django.core.exceptions import ValidationError
-from .models import Booking, Table
-from .utils import get_available_slots
-from .constants import SLOT_DURATION
+from booking.models import Booking, Table
+from booking.utils import get_available_slots
+from booking.constants import SLOT_DURATION
+
+User = get_user_model()
 
 
-class BookingForm(forms.ModelForm):
+class StaffBookingForm(forms.ModelForm):
+    name = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=True,
+        label='Booking for user'
+    )
+
     date = forms.DateField(
         widget=forms.DateInput(
             attrs={
@@ -29,7 +38,6 @@ class BookingForm(forms.ModelForm):
         exclude = (
             'start_time',
             'table',
-            'name',
             'status',
         )
         widgets = {
@@ -144,28 +152,3 @@ class BookingForm(forms.ModelForm):
             booking.save()
 
         return booking
-
-
-class BookingAdminForm(forms.ModelForm):
-    cancellation_reason = forms.CharField(
-        required=False,
-        widget=forms.Textarea(attrs={'rows': 3}),
-        help_text='Optional reason sent to the customer',
-        label='Cancellation reason',
-    )
-
-    class Meta:
-        model = Booking
-        fields = '__all__'
-
-    def clean(self):
-        cleaned_data = super().clean()
-        status = cleaned_data.get('status')
-        reason = cleaned_data.get('cancellation_reason')
-
-        if status == 'CANCELLED' and not reason:
-            raise forms.ValidationError(
-                'Please provide a cancellation reason.'
-            )
-
-        return cleaned_data

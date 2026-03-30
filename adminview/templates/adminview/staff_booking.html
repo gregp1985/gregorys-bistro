@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class='booking-page container mx-auto' style='max-width: 800px;'>
+
+  {% if editing %}
+    <h3>Editing Booking</h3>
+    <p><strong>Reference:</strong> {{ form.instance.reference }}</p>
+    <p><strong>Name:</strong> {{ form.instance.name }}</p>
+    <p><strong>Current Date:</strong> {{ form.instance.start_time|date:'F j, Y' }}</p>
+    <p><strong>Current Time:</strong> {{ form.instance.start_time|time:'H:i' }}</p>
+    <p><strong>Current Party Size:</strong> {{ form.instance.party_size }}</p>
+    <hr>
+  {% else %}
+    <h3>Make a Booking</h3>
+    <p><i>Select a User, Date and Party Size to show available times</i></p>
+  {% endif %}
+
+  <!-- BOOKING FORM -->
+  <section class='booking-form'>
+    <form
+      method='post'
+      id='booking-form'
+      {% if editing %}
+        data-booking-id='{{ form.instance.id }}'
+      {% endif %}
+    >
+      {% csrf_token %}
+      <div>
+        <label class='form-bkg'>Name:</label>
+        {{ form.name }}
+      </div>
+      <div>
+        <label class='form-bkg'>Date:</label>
+        {{ form.date }}
+      </div>
+
+      <div>
+        <label class='form-bkg'>Number of People:</label>
+        {{ form.party_size }}
+      </div>
+
+      <div id='slot-container' style='display:none;'>
+        <label  class='form-bkg'>Time:</label>
+        <select name='slot' id='id_slot' required>
+          <option value=''>Select a time</option>
+        </select>
+      </div>
+
+      <div>
+        <label class='form-bkg'>Allergies?</label>
+        {{ form.allergies }}
+      </div>
+
+      {{ form.non_field_errors }}
+
+      {% for field in form %}
+        {{ field.errors }}
+      {% endfor %}
+
+      <button class='btn btn-bistro btn-sm btn-bdr mt-4' type='submit'>
+        {% if editing %}
+          Amend booking
+        {% else %}
+          Make booking
+        {% endif %}
+      </button>
+    </form>
+  </section>
+{% endblock %}
+
+{% block extras %}
+<script src='{% static "js/staff_available_slots.js" %}'></script>
+{% endblock %}

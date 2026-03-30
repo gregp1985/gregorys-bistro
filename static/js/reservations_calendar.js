@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const calendar = new FullCalendar.Calendar(calendarEl, {
     locale: 'en-gb',
+    timeZone: 'Europe/London',
 
     initialView: 'timeGridWeek',
     navLinks: true,
@@ -44,7 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
       const modal = document.getElementById('booking-modal');
       modal.querySelector('.ref').textContent = event.extendedProps.reference;
       modal.querySelector('.time').textContent =
-      event.start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      event.start.toLocaleTimeString('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Europe/London'
+      });
       modal.querySelector('.party').textContent = event.extendedProps.party_size;
       modal.querySelector('.status').textContent = event.extendedProps.status;
       modal.querySelector('.allergies').textContent =
