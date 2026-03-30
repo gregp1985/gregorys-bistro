@@ -28,6 +28,26 @@ def cancellations_view(request):
 
 
 @staff_member_required
+def staff_cancel_booking(request, booking_ref):
+    booking = get_object_or_404(Booking, reference=booking_ref)
+
+    if request.method == "POST":
+        booking.status = 'Cancelled'
+        booking.save()
+        messages.success(
+            request,
+            f'Booking {booking.reference} has been cancelled.'
+        )
+    else:
+        messages.warning(
+            request,
+            "Invalid request method. Booking not cancelled."
+        )
+
+    return redirect('adminview:reservations')
+
+
+@staff_member_required
 def staff_delete_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     booking.delete()

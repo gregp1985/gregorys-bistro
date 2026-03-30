@@ -1,3 +1,10 @@
+function getCSRFToken() {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith('csrftoken='))
+    ?.split('=')[1];
+}
+
 document.addEventListener('DOMContentLoaded', function () {
 
   const calendarEl = document.getElementById('calendar');
@@ -43,6 +50,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const modal = document.getElementById('booking-modal');
       modal.querySelector('.ref').textContent = event.extendedProps.reference;
+      modal.querySelector('.date').textContent = event.start.toLocaleDateString('en-GB', {
+        weekday: 'short',  // optional, e.g., "Mon"
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      });
       modal.querySelector('.time').textContent =
       event.start.toLocaleTimeString('en-GB', {
         hour: '2-digit',
@@ -56,6 +69,32 @@ document.addEventListener('DOMContentLoaded', function () {
       const editBtn = modal.querySelector('.edit-btn');
 
       editBtn.href = editBtn.dataset.editUrl.replace('/0/', `/${event.id}/`);
+
+      const cancelBtn = modal.querySelector('#cancel-btn');
+
+      cancelBtn.onclick = function () {
+        if (!confirm("Are you sure you want to cancel this booking?")) return;
+        const url = `/staff/cancel/${event.extendedProps.reference}/`;
+        fetch(`/staff/cancel/${event.extendedProps.reference}/`, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCSRFToken(),
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            alert('Booking cancelled!');
+            event.remove(); // remove event from calendar
+            modal.classList.remove('open');
+          } else {
+            alert('Failed to cancel booking.');
+          }
+        })
+        .catch(error => {
+          console.error('Error cancelling booking:', error);
+          alert('An error occurred.');
+        });
+      };
 
       modal.classList.add('open');
     },

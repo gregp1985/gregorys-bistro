@@ -14,6 +14,7 @@
     <h3>Booking details</h3>
 
     <p><strong>Ref:</strong> <span class='ref'></span></p>
+    <p><strong>Date:</strong> <span class='date'></span></p>
     <p><strong>Time:</strong> <span class='time'></span></p>
     <p><strong>Party size:</strong> <span class='party'></span></p>
     <p><strong>Status:</strong> <span class='status'></span></p>
@@ -27,6 +28,12 @@
       >
         Edit booking
       </a>
+      <button
+        id='cancel-btn'
+        class='btn btn-bistro btn-sm btn-bdr mt-4'
+      >
+        Cancel Booking
+      </button>
       <button class='btn btn-bistro btn-sm btn-bdr mt-4' onclick='this.closest(".modal").classList.remove("open")'>
         Close
       </button>
