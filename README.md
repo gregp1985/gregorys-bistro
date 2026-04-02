@@ -109,7 +109,7 @@ Gregory’s Bistro is a fictional restaurant website with a fully automated onli
 5. As Site Admin, when logged in, I can view current and cancelled bookings so that i can determine how busy or popular the restaurant is (must-have)
 6. As Site Admin I can log in to get a list of registered users and see their previous booking history so that admin can manage registered user accounts (should-have)
 7. As Site Admin I can log in to adjust restaurant opening hours so that bookings are not made out of open hours (could-have)
-8. As Site Admin I will be able to view any booking clashes or issues (inc due to opening hours changes) so that if this does happen the user can be notified (should-have)
+8. As Site Admin I will be able to view and change Tables and the number of seats on them so that bookings can only be made on existing tables (should-have)
 9. As Site Admin I can manage existing booking including cancelling with custom notifications so that users are made aware of cancellations to their reservations and have the opportunity to rebook (should-have)
 10. As a staff member I can log in to view, edit, cancel and delete bookings so that when open the restaurant bookings can be managed in real time and allow for walkins (must-have)
 
@@ -279,9 +279,29 @@ The footer contains all relevant social media links that the business has so the
 
 ### HTML, Javascript and CSS and Lighthouse
 
-All have been parsed through HTML, CSS and Javascript validators respectively and no problems were found.
+All have been parsed through HTML, CSS and Javascript validators respectively and no significant problems were found. Some Javascript warnings regarding elements only available in ES^. But this is expected.
 
-Lighthouse returned figures of 90 for Accessibility and 100 for Best Practice. Due to an issue with Lighthouse it was not able to return a Performance score.
+Lighthouse returned figures of 99 for Performance, 98 for Accessibility and 100 for Best Practice.
+
+<details><summary>W3C HTML Validation</summary>
+<img src='/readmefiles/w3c-html-validation.png'>
+</details>
+
+<details><summary>W3C CSS Validation</summary>
+<img src='/readmefiles/w3c-css-validation.png'>
+</details>
+
+<details><summary>JShint Validation</summary>
+<img src='/readmefiles/jshint-js-validation.png'>
+</details>
+
+<details><summary>VS Code Validation</summary>
+<img src='/readmefiles/vscode-validation.png'>
+</details>
+
+<details><summary>Lighthouse</summary>
+<img src='/readmefiles/lighthouse-validation.png'>
+</details>
 
 ### Automated Testing
 
@@ -299,6 +319,13 @@ Automated tests cover:
 
 All automated tests pass successfully.
 
+<details><summary>Automated Tests</summary>
+<img src='/readmefiles/automated-tests.png'>
+</details>
+
+<details><summary>Automated Tests Results</summary>
+<img src='/readmefiles/automated-test-results.png'>
+</details>
 
 ---
 
@@ -333,6 +360,137 @@ The table below can be used as a checklist to confirm functionality.
 
 ---
 
+### User Story Testing
+
+1. As a user I can login to the website so that my details are stored for future bookings
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Register as new user | Email Verification and ability to log in | Works as expected |
+ | Manage Account | View Account details and change email/password | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory1-test1.png'>
+<img src='/readmefiles/userstory1-test2.png'>
+
+</details>
+
+2. As a user, I can login to make bookings, edit bookings and cancel bookings so that bookings can be self managed
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | As logged in User, make a booking | Booking is created successfully and visible on booking screen | Works as expected |
+ | Edit an existing booking | Booking is edited | Works as expected |
+ | Cancel a booking | Booking is cancelled | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory2-test1.png'>
+<img src='/readmefiles/userstory2-test2.png'>
+</details>
+
+3. As a user, whether logged in or not, I can view or download the Menu so that users can decide if the food and price point is right for them
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | View the Menu when not logged in | Menu can be viewed when not logged in | Works as expected |
+ | Download PDF of Menu | PDF of Menu downloads | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory3-test1.png'>
+<img src='/readmefiles/userstory3-test2.png'>
+</details>
+
+4. As a user without being logged in I can view Opening Times, Restaurant Location and Contact Details so that users can determine if the location is suitable as well as times for bookings. And if they want they can contact the restaurant
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | View the Contact Page when not logged in | View the Contact Page | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory4-test1.png'>
+
+</details>
+
+5. As Site Admin, when logged in, I can view current and cancelled bookings so that i can determine how busy or popular the restaurant is
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Log in as admin and view existing and cancelled bookings | Can view current and cancelled bookings | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory5-test1.png'>
+<img src='/readmefiles/userstory5-test2.png'>
+<img src='/readmefiles/userstory5-test3.png'>
+</details>
+
+6. As Site Admin I can log in to get a list of registered users and see their previous booking history so that admin can manage registered user accounts
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Locate registered users list | Display registered users | Works as expected |
+ | Search booking history | find booking history | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory6-test1.png'>
+<img src='/readmefiles/userstory6-test2.png'>
+</details>
+
+7. As Site Admin I can log in to adjust restaurant opening hours so that bookings are not made out of open hours
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | View Opening Hours in admin panel | Adjust Opening Hours | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory7-test1.png'>
+<img src='/readmefiles/userstory7-test2.png'>
+</details>
+
+8. As Site Admin I will be able to view and change Tables and the number of seats on them so that bookings can only be made on existing tables
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Adjust table | Table adjusted | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory8-test1.png'>
+<img src='/readmefiles/userstory8-test2.png'>
+</details>
+
+9. As Site Admin I can manage existing booking including cancelling with custom notifications so that users are made aware of cancellations to their reservations and have the opportunity to rebook (should-have)
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Cancel Booking | Cancellation email with custom response received | Works as expected |
+ | Scroll to footer at bottom of page | find footer | Works as expected |
+ | Scroll to footer at bottom of page | find social links | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory9-test1.png'>
+<img src='/readmefiles/userstory9-test2.png'>
+<img src='/readmefiles/userstory9-test3.png'>
+</details>
+
+10. As a staff member I can log in to view, edit, cancel and delete bookings so that when open the restaurant bookings can be managed in real time and allow for walkins (must-have)
+
+**Step** | **Expected Result** | **Actual Result**
+------------ | ------------ | ------------ |
+ | Go to Reservation Calendar | See bookings on calendar | Works as expected |
+ | Make a booking | Booking is created | Works as expected |
+ | Edit a booking | Booking is updated | Works as expected |
+ | Cancel a booking | Booking is cancelled | Works as expected |
+ | Delete a booking | Booking is deleted | Works as expected |
+
+<details><summary></summary>
+<img src='/readmefiles/userstory10-test1.png'>
+<img src='/readmefiles/userstory10-test2.png'>
+<img src='/readmefiles/userstory10-test3.png'>
+<img src='/readmefiles/userstory10-test4.png'>
+</details>
+
+
+---
+
 ### Validation Testing
 
 The following validation rules were manually verified:
@@ -360,6 +518,15 @@ The site was tested for responsiveness using browser developer tools and physica
 
 Bootstrap ensures a consistent and responsive layout across all supported devices.
 
+<details><summary>Phone</summary>
+<img src='/readmefiles/responsiveness-phone.png'>
+</details>
+<details><summary>Tablet</summary>
+<img src='/readmefiles/responsiveness-tablet.png'>
+</details>
+<details><summary>Laptop</summary>
+<img src='/readmefiles/responsiveness-laptop.png'>
+</details>
 ---
 
 ### Bugs & Fixes
@@ -367,7 +534,12 @@ Bootstrap ensures a consistent and responsive layout across all supported device
 - **Edit booking overlap issue:**  
   Editing an existing booking initially failed due to the booking being included in overlap validation.  
   This was resolved by excluding the booking itself from overlap checks while editing.
-
+- **Color Contrast Issue**
+  The initial colour scheme didn't pass the contrast checkers so they were adjusted to use #E2A428 for the background and #470606 for the foreground. This passes all contrast criteria with a ratio of 7.38:1.
+- **Time field displayed before it is selectable**
+  Adjusted the html and javascript such that the field was hidden until the other fields were completed, added text hint to explain that date and party size were required before selecting a time, for editing adjusted the code such that all fields are populated from the original bookings
+- **No Delete option for bookings**
+  No user level delete function present, Created a page called Cancellations for STAFF users only, where they can view cancelled bookings, acknowledge and delete them
 ---
 
 ## Deployment
