@@ -22,6 +22,15 @@ Gregory’s Bistro is a fictional restaurant website with a fully automated onli
 - [Booking Logic](#booking-logic-technical-overview)
 - [Tech Stack](#tech-stack)
 - [Testing](#testing)
+  - [HTML, Javascript and CSS and Lighthouse](#html-javascript-and-css-and-lighthouse)
+  - [Automated Testing](#automated-testing)
+  - [Manual Testing](#manual-testing)
+  - [Validation](#validation-testing)
+  - [Responsiveness](#responsiveness--browser-compatibility)
+  - [Bugs & Fixes](#bugs--fixes)
+- [Deployment](#deployment-1)
+- [Credits](#credits)
+- [Acknowledgements](#acknowledgements)
 
 
 ---
@@ -79,7 +88,30 @@ Gregory’s Bistro is a fictional restaurant website with a fully automated onli
 - Epics were created using the milestones feature
 - Backlog, In Progress, Done headings were used in the kanban
 
-- **Project Board:** Using Github: https://github.com/users/gregp1985/projects/4
+- **Project (Kanban) Board:** Using Github: https://github.com/users/gregp1985/projects/4
+
+<details><summary>Kanban</summary>
+<img src='/readmefiles/kanban.png'>
+</details>
+<details><summary>User Stories</summary>
+<img src='/readmefiles/user_stories.png'>
+</details>
+<details><summary>Milestones</summary>
+<img src='/readmefiles/milestones.png'>
+</details>
+
+### User Stories
+
+1. As a user I can login to the website so that my details are stored for future bookings (must-have)
+2. As a user, I can login to make bookings, edit bookings and cancel bookings so that bookings can be self managed (must-have)
+3. As a user, whether logged in or not, I can view or download the Menu so that users can decide if the food and price point is right for them (could-have)
+4. As a user without being logged in I can view Opening Times, Restaurant Location and Contact Details so that users can determine if the location is suitable as well as times for bookings. And if they want they can contact the restaurant (could-have)
+5. As Site Admin, when logged in, I can view current and cancelled bookings so that i can determine how busy or popular the restaurant is (must-have)
+6. As Site Admin I can log in to get a list of registered users and see their previous booking history so that admin can manage registered user accounts (should-have)
+7. As Site Admin I can log in to adjust restaurant opening hours so that bookings are not made out of open hours (could-have)
+8. As Site Admin I will be able to view any booking clashes or issues (inc due to opening hours changes) so that if this does happen the user can be notified (should-have)
+9. As Site Admin I can manage existing booking including cancelling with custom notifications so that users are made aware of cancellations to their reservations and have the opportunity to rebook (should-have)
+10. As a staff member I can log in to view, edit, cancel and delete bookings so that when open the restaurant bookings can be managed in real time and allow for walkins (must-have)
 
 ---
 
@@ -88,6 +120,7 @@ Gregory’s Bistro is a fictional restaurant website with a fully automated onli
 ### Colours
 
 Having looked at other similar websites I decided on a warm yellow and deep reds feel to the website, as this is supposed to give a feeling of a cosy bistro.
+The initial colour scheme didn't pass the contrast checkers so they were adjusted to use #E2A428 for the background and #470606 for the foreground. This passes all contrast criteria with a ratio of 7.38:1.
 
 ### Fonts
 
@@ -120,7 +153,7 @@ The footer contains all relevant social media links that the business has so the
 - Three database models show all the fields stored in the database
 
 <details><summary>Show diagram</summary>
-<img src='/readmefiles/database_models.png'>
+<img src='/readmefiles/database_models.jpg'>
 </details>
 
 ##### Table model
@@ -153,7 +186,10 @@ The footer contains all relevant social media links that the business has so the
 
 #### Wireframes
 
-- **Wireframes:** Built with Mockflow: <a href='/readmefiles/pdf/Wireframes-gregorys.pdf'>Wireframes PDF</a>
+<details><summary>Show wireframes</summary>
+<img src='/readmefiles/wireframes-ss.jpg'>
+</details>
+- **Wireframes:** Built with Mockflow (PDF Download): <a href='/readmefiles/pdf/Wireframes-gregorys.pdf'>Wireframes PDF</a>
 
 ---
 
@@ -172,13 +208,18 @@ The footer contains all relevant social media links that the business has so the
   - Booking duration
   - Existing reservations
 - Users can edit or cancel their own bookings.
-- Staff can edit bookings if required.
+- Staff can edit, cancel and delete bookings as required.
 
 ### Validation & Business Rules
 - Bookings cannot be made outside opening hours.
 - Bookings cannot be made in the past.
 - Double bookings are prevented at both application and database level.
 - The smallest suitable available table is assigned automatically.
+
+### CRUD functions
+- Both Staff and User can create bookings by their repective boooking pages when logged in.
+- Both Staff and Users can edit or cancel bookings. Users from the booking page and staff from the reservations page.
+- Staff can Acknowledge and delete cancelled bookings from the cancellations page when logged in.
 
 ---
 
@@ -201,21 +242,37 @@ The footer contains all relevant social media links that the business has so the
 - **Javascript**
 
 ### Database
-- **PostgreSQL**
+- [Postgres](https://www.postgresql.org/)
   - Uses range fields and exclusion constraints to prevent overlapping bookings.
 
 ### Frontend
-- **Bootstrap**
+- [Bootstrap v5.2](https://getbootstrap.com/)
   - Responsive layout and styling.
 
+### Version Management and Repository
+- [GitHub](https://github.com/)
+
+### Fonts
+- [Google Fonts](https://fonts.google.com/)
+
+### Wireframes
+- [Mockflow](https://mockflow.com/)
+
 ### Media Storage
-- **Cloudinary**
+- [Cloudinary](https://cloudinary.com/)
   - Used for image storage and delivery.
 
 ### Deployment
-- **Heroku**
+- [Heroku Platform](https://id.heroku.com/login)
   - Hosts the live application with integrated PostgreSQL and Cloudinary services.
 
+### Validation
+  - [WC3 Validator](https://validator.w3.org/)
+  - [Jigsaw W3 Validator](https://jigsaw.w3.org/css-validator/)
+  - [JShint](https://jshint.com/)
+  - [Pycodestyle(PEP8)](https://pypi.org/project/pycodestyle/)
+  - [Lighthouse](https://developers.google.com/web/tools/lighthouse/)
+  - [Wave Validator](https://wave.webaim.org/)
 ---
 
 ## Testing
@@ -317,14 +374,75 @@ Bootstrap ensures a consistent and responsive layout across all supported device
 
 The project was deployed to **Heroku** using the following steps:
 
-1. Create a Heroku application.
-2. Configure environment variables:
-   - `SECRET_KEY`
-   - `DATABASE_URL`
-   - `CLOUDINARY_URL`
-3. Attach a Heroku PostgreSQL database.
-4. Deploy the application from GitHub.
-5. Run database migrations and create a superuser.
+### Heroku Deployment
+
+[Official Page](https://devcenter.heroku.com/articles/git) (Ctrl + click)
+
+This application has been deployed from Github using Heroku. Here's how:
+
+1. Create an account at heroku.com
+
+2. Create an app, give it a name for such as ci-pp4-the-diplomat, and select a region
+
+3. Under resources search for postgres, and add a Postgres database to the app
+
+Heroku Postgres
+
+1. Note the DATABASE_URL, this can be set as an environment variable in Heroku and your local deployment(env.py)
+
+2. Install the plugins dj-database-url and psycopg2-binary.
+
+3. Run pip3 freeze > requirements.txt so both are added to the requirements.txt file
+
+4. Create a Procfile with the text: web: gunicorn the_diplomat.wsgi
+
+5. In the settings.py ensure the connection is to the Heroku postgres database, no indentation if you are not using a seperate test database.
+I store mine in env.py
+
+6. Ensure debug is set to false in the settings.py file
+
+7. Add localhost, and herokuapp.com to the ALLOWED_HOSTS variable in settings.py
+
+8. Run "python3 manage.py showmigrations" to check the status of the migrations
+
+9. Run "python3 manage.py migrate" to migrate the database
+
+10. Run "python3 manage.py createsuperuser" to create a super/admin user
+
+11. Run "python3 manage.py loaddata categories.json" on the categories file in products/fixtures to create the categories
+
+12. Run "python3 manage.py loaddata products.json" on the products file in products/fixtures to create the products
+
+13. Install gunicorn and add it to the requirements.txt file using the command pip3 freeze > requirements.txt
+
+14. Disable collectstatic in Heroku before any code is pushed using the command heroku config:set DISABLE_COLLECTSTATIC=1 -a ci-pp4-the-diplomat
+
+15. Ensure the following environment variables are set in Heroku
+
+16. Connect the app to GitHub, and enable automatic deploys from main if you wish
+
+17. Click deploy to deploy your application to Heroku for the first time
+
+18. Click on the link provided to access the application
+
+19. If you encounter any issues accessing the build logs is a good way to troubleshoot the issue
+<hr>
+
+### Fork Repository
+To fork the repository by following these steps:
+1. Go to the GitHub repository
+2. Click on Fork button in upper right hand corner
+<hr>
+
+### Clone Repository
+You can clone the repository by following these steps:
+1. Go to the GitHub repository 
+2. Locate the Code button above the list of files and click it 
+3. Select if you prefere to clone using HTTPS, SSH, or Github CLI and click the copy button to copy the URL to your clipboard
+4. Open Git Bash
+5. Change the current working directory to the one where you want the cloned directory
+6. Type git clone and paste the URL from the clipboard ($ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY)
+7.Press Enter to create your local clone.
 
 ---
 
