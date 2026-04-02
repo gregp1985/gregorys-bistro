@@ -1,6 +1,28 @@
 # Gregory’s Bistro
 
-Gregory’s Bistro is a restaurant website with a fully automated online table booking system. Authenticated users can create, edit, and cancel reservations, while staff and administrators can manage bookings through dedicated interfaces. The system enforces opening hours, prevents double bookings, and assigns the most appropriate available table automatically.
+Gregory’s Bistro is a fictional restaurant website with a fully automated online table booking system. Authenticated users can create, edit, and cancel reservations, while staff and administrators can manage bookings through dedicated interfaces. The system enforces opening hours, prevents double bookings, and assigns the most appropriate available table automatically.
+
+**Developer: Greg Phillips**
+
+---
+
+## Table of Contents
+- [Live Site & Repository](#live-site--repository)
+- [Project Goals](#project-goals)
+- [Target Users](#target-users)
+- [Agile Project Management](#agile-project-management)
+- [Design](#design)
+  - [Colours](#colours)
+  - [Fonts](#fonts)
+  - [Structure](#structure)
+    - [Website Pages](#website-pages)
+    - [Database](#database)
+  - [Wireframes](#wireframes)
+- [Features](#features)
+- [Booking Logic](#booking-logic-technical-overview)
+- [Tech Stack](#tech-stack)
+- [Testing](#testing)
+
 
 ---
 
@@ -38,12 +60,100 @@ Gregory’s Bistro is a restaurant website with a fully automated online table b
 
 - **Staff Users**
   - Access a reservations page when logged in.
-  - View and edit all bookings when required.
+  - Access the Cancellations page when logged in.
+  - View, edit, cancel and delete all bookings when required.
 
 - **Admin Users**
   - Full access to the Django admin panel.
+  - Manage registered user accounts.
   - Manage bookings, tables, and opening hours.
   - Use a fully filterable bookings list for efficient administration.
+
+---
+
+## Agile Project Management
+
+### Kanban, Epics & User Stories
+
+- GitHub Kanban was used to track all open user stories
+- Epics were created using the milestones feature
+- Backlog, In Progress, Done headings were used in the kanban
+
+- **Project Board:** Using Github: https://github.com/users/gregp1985/projects/4
+
+---
+
+## Design
+
+### Colours
+
+Having looked at other similar websites I decided on a warm yellow and deep reds feel to the website, as this is supposed to give a feeling of a cosy bistro.
+
+### Fonts
+
+The fonts selected were from Google Fonts, Playfair Display with sans-serif as a backup font.
+
+### Structure
+
+#### Website Pages
+
+The site was designed for the user to be familiar with the layout such as a navigation bar along the top of the pages and a hamburger menu button for smaller screen.
+
+The footer contains all relevant social media links that the business has so the user can visit any social media site and follow the business there to expand the businesses followers, likes and shares.
+
+- The site consists of the following pages:
+  - Homepage with links to Login or to Book a table, depending on whether the user is already logged in or not. There is also some info about the restaurant and some featured dishes
+  - Gallery which has images of some of the food as well as images of the restaurant
+  - Menu Page which has the current list of all available items with filters and an option to download the menu as PDF
+  - Contact Page allows the user to contact us from the displayed email and phone number or visit the address listed.
+  - Book a Table page (appears only if user is logged in) allows registered users to book a table based on party size, date and time requested. and allows them to enter any allergies. This page also allows user to see previous bookings and upcoming bookings with options to edit or cancel bookings
+  - Staff Bookings (appears if staff member is logged in) allows staff members to book a new table or edit an existing booking. This has an extra selection box for the user for the booking
+  - Reservations Page (appears if staff member is logged in) allows staff to view a calendar with all existing bookings which upon click can be cancelled or editted (via the Staff bookings page)
+  - Cancellations Page (appears if staff member is logged in) allows staff to view cancelled bookings and acknowledge and delete the bookings
+  - Login / Logout allows users to login to make bookings, view, edit, and cancel bookings
+  - Register allows the user to regiser so they can use the booking system
+  - Account Page allows logged in users to view their account, and change the email or password
+
+#### Database
+
+- Built with Python and the Django framework with a Postgres database for the deployed Heroku version(production)
+- Three database models show all the fields stored in the database
+
+<details><summary>Show diagram</summary>
+<img src='/readmefiles/database_models.png'>
+</details>
+
+##### Table model
+- Stores table number and seating capacity.
+- The table model contains:
+  - number
+  - seats
+
+##### OpeningHours model
+- Stores opening and closing times per weekday.
+- One entry per weekday enforced.
+- The OpeningHours model contains:
+  - weekday
+  - open_time
+  - close_time
+
+##### Booking model
+- Linked to a user and a table.
+- Stores party size, allergies, start time, status, and unique reference.
+- Uses a stored time range for overlap detection.
+- The Booking model contains:
+  - table *ForeignKey Table Model
+  - name *ForeignKey User Model
+  - reference
+  - allergies
+  - party_size
+  - start_time
+  - time_range
+  - status
+
+#### Wireframes
+
+- **Wireframes:** Built with Mockflow: <a href='/readmefiles/pdf/Wireframes-gregorys.pdf'>Wireframes PDF</a>
 
 ---
 
@@ -69,22 +179,6 @@ Gregory’s Bistro is a restaurant website with a fully automated online table b
 - Bookings cannot be made in the past.
 - Double bookings are prevented at both application and database level.
 - The smallest suitable available table is assigned automatically.
-
----
-
-## Data Model Overview
-
-### Table
-- Stores table number and seating capacity.
-
-### OpeningHours
-- Stores opening and closing times per weekday.
-- One entry per weekday enforced.
-
-### Booking
-- Linked to a user and a table.
-- Stores party size, allergies, start time, status, and unique reference.
-- Uses a stored time range for overlap detection.
 
 ---
 
@@ -172,7 +266,10 @@ The table below can be used as a checklist to confirm functionality.
 | Edit booking | Edit booking and keep same slot | Booking updates successfully | Pass |
 | Cancel booking | Cancel existing booking | Booking cancelled | Pass |
 | Staff reservations | Login as staff | All bookings visible | Pass |
+| Staff make booking | Make booking as staff | Booking created | Pass |
 | Staff edit booking | Edit booking as staff | Booking updates | Pass |
+| Staff cancel booking | Cancel booking as staff | Booking cancelled | Pass |
+| Staff delete booking | Delete booking as staff | Booking deleted | Pass |
 | Admin access | Login as admin | Admin panel accessible | Pass |
 | Admin Cancel Booking | Emails user cancellation notice | Email received | Pass |
 | Admin filtering | Filter bookings in admin | Results filtered correctly | Pass |

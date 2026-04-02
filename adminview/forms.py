@@ -105,7 +105,7 @@ class StaffBookingForm(forms.ModelForm):
             if timezone.is_naive(start_dt):
                 start_dt = timezone.make_aware(start_dt)
 
-        except Exception as e:
+        except Exception:
             raise ValidationError('Invalid time slot selected.')
 
         cleaned_data['start_time'] = start_dt
